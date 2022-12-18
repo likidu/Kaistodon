@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
   import Router, { location, pop } from 'svelte-spa-router';
 
   import OnyxApp from '@/ui/components/app/OnyxApp.svelte';
@@ -10,10 +11,7 @@
   import { Comment, Home, Login, NotFound, User } from '@/lib/routes';
   import { settings } from '@/lib/stores/settings';
 
-  OnyxKeys.setOptions({
-    repeatDelay: 2000,
-    repeatRate: 2000,
-  });
+  const queryClient = new QueryClient();
 
   const routes = {
     '/': Home,
@@ -35,13 +33,20 @@
         pop();
       },
     },
-    { priority: 4 },
+    { priority: 1 },
   );
+
+  OnyxKeys.setOptions({
+    repeatDelay: 2000,
+    repeatRate: 2000,
+  });
 
   $: Onyx.settings.update($settings);
 </script>
 
 <OnyxApp>
   <AppMenu slot="app-menu" />
-  <Router {routes} />
+  <QueryClientProvider client={queryClient}>
+    <Router {routes} />
+  </QueryClientProvider>
 </OnyxApp>

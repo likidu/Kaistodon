@@ -1,38 +1,39 @@
 <script lang="ts">
-  import CheckboxRow from '@/ui/components/form/CheckboxRow.svelte';
-  import InlineSelectRow from '@/ui/components/form/InlineSelectRow.svelte';
+  import ListItem from '@/ui/components/list/ListItem.svelte';
   import Typography from '@/ui/components/Typography.svelte';
   import View from '@/ui/components/view/View.svelte';
   import ViewContent from '@/ui/components/view/ViewContent.svelte';
-
-  import svelteLogo from '@/assets/svelte.svg';
+  import { Alignment } from '@/ui/enums';
 
   import LineClamp from '@/lib/components/LineClamp.svelte';
 
-  let values: any = {
-    checkbox1: true,
-    inlineSelect1: '1',
-  };
+  import ViewHeader from '@/ui/components/view/ViewHeader.svelte';
+  import { usePublicTimeline } from '../services';
+
+  const timeline = usePublicTimeline();
 </script>
 
 <View>
+  <ViewHeader title="Home" />
   <ViewContent>
-    <Typography align="center">Home</Typography>
-    <CheckboxRow label="Checkbox 1" checked={values.checkbox1} onChange={(val) => (values.checkbox1 = val)} />
-    <InlineSelectRow
-      label="Select 1"
-      value={values.inlineSelect1}
-      options={[
-        { id: '1', label: 'One' },
-        { id: '2', label: 'Two' },
-        { id: '3', label: 'Three' },
-      ]}
-      onChange={(val) => (values.inlineSelect1 = val)}
-    />
-    <div>
-      <img src="/vite.svg" class="logo" alt="Vite Logo" />
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </div>
+    {#if $timeline.status === 'loading'}
+      <Typography align="center">Loading...</Typography>
+    {:else if $timeline.status === 'error'}
+      <Typography align="center">Error!</Typography>
+    {:else}
+      {@const items = $timeline.data.value}
+      {#each items as item, i}
+        <ListItem
+          imageUrl={item.account.avatarStatic}
+          align={Alignment.Top}
+          navi={{ itemId: `timeline-${i + 1}`, onSelect: () => {} }}
+        >
+          <svelte:fragment slot="primaryText">
+            {@html item.content}
+          </svelte:fragment>
+        </ListItem>
+      {/each}
+    {/if}
     <LineClamp lines={2}>
       <p class="text-sky-300">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore

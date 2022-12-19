@@ -21,17 +21,21 @@
     {:else if $timeline.status === 'error'}
       <Typography align="center">Error!</Typography>
     {:else}
-      {@const items = $timeline.data.value}
-      {#each items as item, i}
-        <ListItem
-          imageUrl={item.account.avatarStatic}
-          align={Alignment.Top}
-          navi={{ itemId: `timeline-${i + 1}`, onSelect: () => {} }}
-        >
-          <svelte:fragment slot="primaryText">
-            {@html item.content}
-          </svelte:fragment>
-        </ListItem>
+      {@const statuses = $timeline.data.value}
+      {console.log(statuses)}
+      {#each statuses as status, i}
+        {#if status.visibility === 'public'}
+          <ListItem
+            imageUrl={status.account.avatarStatic}
+            align={Alignment.Top}
+            accentText={status.account.displayName}
+            navi={{ itemId: `timeline-${i + 1}`, onSelect: () => {} }}
+          >
+            <svelte:fragment slot="primaryText">
+              {@html status.content}
+            </svelte:fragment>
+          </ListItem>
+        {/if}
       {/each}
     {/if}
     <LineClamp lines={2}>

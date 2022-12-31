@@ -10,9 +10,9 @@ export const themes: ThemeConfig[] = [
       cardColorS: 0,
       cardColorL: 100,
 
-      accentColorH: 200,
-      accentColorS: 63.3,
-      accentColorL: 57.3,
+      accentColorH: 240,
+      accentColorS: 100,
+      accentColorL: 67,
 
       textColorH: 0,
       textColorS: 0,

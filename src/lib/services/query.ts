@@ -13,9 +13,20 @@ const masto = await login({
  * @returns
  */
 export const usePublicTimeline = () =>
-  useQuery<IteratorResult<Status[]>, Error>(['timeline'], async () => {
-    return await masto.timelines.fetchPublic({
+  useQuery<Status[], Error>(['timeline'], async () => {
+    return await masto.v1.timelines.listPublic({
       local: true,
+      limit: 10,
+    });
+  });
+
+/**
+ * @param limit: # of items returns
+ * @returns
+ */
+export const useTrendStatus = () =>
+  useQuery<Status[], Error>(['trend-status'], async () => {
+    return await masto.v1.trends.listStatuses({
       limit: 10,
     });
   });

@@ -1,5 +1,10 @@
 export { default as Comment } from './Comment.svelte';
-export { default as Home } from './Home.svelte';
+export { default as Federated } from './Federated.svelte';
 export { default as Login } from './Login.svelte';
 export { default as NotFound } from './NotFound.svelte';
-export { default as User } from './User.svelte';
+export { default as Public } from './Public.svelte';
+export { default as Settings } from './Settings.svelte';
+export { default as Statuses } from './Statuses.svelte';
+export { default as Tags } from './Tags.svelte';
+export { default as Timeline } from './Timeline.svelte';
+export { default as Trending } from './Trending.svelte';

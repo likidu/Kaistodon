@@ -9,9 +9,9 @@
   --card-color-s: 13%;
   --card-color-l: 99%;
 
-  --accent-color-h: 232;
-  --accent-color-s: 64%;
-  --accent-color-l: 54%;
+  --accent-color-h: 240;
+  --accent-color-s: 100%;
+  --accent-color-l: 67%;
 
   --text-color-h: 0;
   --text-color-s: 0%;
@@ -115,4 +115,21 @@ input {
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+.sub-route {
+  @apply flex flex-row justify-center gap-x-1 w-full;
+}
+
+.sub-route > li.active {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.stats {
+  color: var(--secondary-text-color);
+  @apply flex justify-center space-x-6 mt-1;
+}
+.stats > .item {
+  @apply flex items-center space-x-1 text-xl;
 }

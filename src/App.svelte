@@ -1,6 +1,6 @@
 <script lang="ts">
   import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
-  import Router, { location, pop } from 'svelte-spa-router';
+  import Router, { location, pop, replace } from 'svelte-spa-router';
 
   import OnyxApp from '@/ui/components/app/OnyxApp.svelte';
   import { Onyx } from '@/ui/services';
@@ -8,15 +8,18 @@
 
   import AppMenu from '@/lib/components/AppMenu.svelte';
 
-  import { Comment, Home, Login, NotFound, User } from '@/lib/routes';
+  import { Comment, Login, NotFound, Settings, Timeline, Trending } from '@/lib/routes';
   import { settings } from '@/lib/stores/settings';
 
   const queryClient = new QueryClient();
 
   const routes = {
-    '/': Home,
+    '/trending': Trending,
+    '/trending/status': Trending,
+    '/trending/tags': Trending,
     '/login': Login,
-    '/user': User,
+    '/timeline': Timeline,
+    '/settings': Settings,
     '/comment/:id': Comment,
     '*': NotFound,
   };
@@ -42,6 +45,8 @@
   });
 
   $: Onyx.settings.update($settings);
+
+  $: if ($location === '/') replace('/trending');
 </script>
 
 <OnyxApp>

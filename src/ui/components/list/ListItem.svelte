@@ -22,53 +22,56 @@
 
 <NavItem {navi} {contextMenu}>
   <div class="root" style={`align-items: ${align}`}>
-    {#if $settings.shortcutKeyLocation === 'left' && navi.shortcutKey}
-      <div class="shortcut">{navi.shortcutKey}</div>
-    {/if}
-    {#if icon}
-      <div class="icon">
-        <Icon size={imageSize} color={iconColor}><svelte:component this={icon} /></Icon>
-      </div>
-    {/if}
-    {#if imageUrl}
-      <img
-        class="image"
-        class:circle={imageStyle === 'circle'}
-        src={imageUrl}
-        alt=""
-        style={`height: ${imageSize}px; width: ${imageSize}px;`}
-      />
-    {/if}
-    <div class="container">
-      {#if accentText}
-        <div class="accent">{accentText}</div>
+    <div class="flex flex-row justify-between w-full">
+      {#if $settings.shortcutKeyLocation === 'left' && navi.shortcutKey}
+        <div class="shortcut">{navi.shortcutKey}</div>
       {/if}
+      {#if icon}
+        <div class="icon">
+          <Icon size={imageSize} color={iconColor}><svelte:component this={icon} /></Icon>
+        </div>
+      {/if}
+      {#if imageUrl}
+        <img
+          class="image"
+          class:circle={imageStyle === 'circle'}
+          src={imageUrl}
+          alt=""
+          style={`height: ${imageSize}px; width: ${imageSize}px;`}
+        />
+      {/if}
+      <div class="grow">
+        {#if accentText}
+          <div class="accent">{accentText}</div>
+        {/if}
+        {#if secondaryText}
+          <div class="secondary">{secondaryText}</div>
+        {/if}
+      </div>
+      {#if $settings.shortcutKeyLocation === 'right' && navi.shortcutKey}
+        <div class="shortcut">{navi.shortcutKey}</div>
+      {/if}
+      {#if $settings.contextMenuIndicators && contextMenu}
+        <div class="menu-icon">
+          <Icon size={IconSize.Small} color={Color.Secondary}><IconDotsVertical /></Icon>
+        </div>
+      {/if}
+    </div>
+    <div class="container">
       {#if primaryText}
         <div class="primary">{primaryText}</div>
       {:else}
         <slot name="primaryText" />
       {/if}
-      {#if secondaryText}
-        <div class="secondary">{secondaryText}</div>
-      {/if}
       <slot name="bottom" />
     </div>
-    {#if $settings.shortcutKeyLocation === 'right' && navi.shortcutKey}
-      <div class="shortcut">{navi.shortcutKey}</div>
-    {/if}
-    {#if $settings.contextMenuIndicators && contextMenu}
-      <div class="menu-icon">
-        <Icon size={IconSize.Small} color={Color.Secondary}><IconDotsVertical /></Icon>
-      </div>
-    {/if}
   </div>
 </NavItem>
 
 <style lang="postcss">
   .root {
+    @apply flex flex-col items-center;
     padding: 7px;
-    display: flex;
-    align-items: center;
     border-bottom: 1px solid var(--divider-color);
   }
 

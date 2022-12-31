@@ -6,7 +6,7 @@
   import { Onyx } from '@/ui/services';
   import { getShortcutFromIndex } from '@/ui/utils/getShortcutFromIndex';
 
-  import { IconDiscover, IconUser } from '@/ui/icons';
+  import { IconDiscover, IconSettings, IconUser } from '@/ui/icons';
 
   type MenuItem = {
     id: string;
@@ -15,14 +15,16 @@
     icon: any | null;
   };
   const menuItems: MenuItem[] = [
-    { id: 'home', text: 'Home', route: '#/', icon: IconDiscover },
-    { id: 'user', text: 'User', route: '/user', icon: IconUser },
-    { id: 'login', text: 'Login', route: '/login', icon: IconUser },
+    { id: 'new', text: 'New Toot', route: '/new', icon: IconDiscover },
+    { id: 'trending', text: 'Trending', route: '#/', icon: IconDiscover },
+    { id: 'timeline', text: 'Timeline', route: '/timeline', icon: IconUser },
+    { id: 'following', text: 'Following', route: '/following', icon: IconUser },
+    { id: 'setttings', text: 'Settings', route: '/settings', icon: IconSettings },
   ];
 </script>
 
 <NavGroup groupId="app-menu">
-  <div class="header">OnyxUI Demo</div>
+  <div class="header">Kaistodon</div>
   <div class="scroller" data-nav-scroller>
     {#each menuItems as item, i}
       <ListItem

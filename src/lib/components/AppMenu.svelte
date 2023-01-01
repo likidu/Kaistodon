@@ -1,12 +1,13 @@
 <script lang="ts">
   import { push } from 'svelte-spa-router';
 
-  import ListItem from '@/ui/components/list/ListItem.svelte';
+  import ListSimpleItem from '@/ui/components/list/ListSimpleItem.svelte';
   import NavGroup from '@/ui/components/nav/NavGroup.svelte';
+  import { IconSize } from '@/ui/enums';
   import { Onyx } from '@/ui/services';
   import { getShortcutFromIndex } from '@/ui/utils/getShortcutFromIndex';
 
-  import { IconDiscover, IconSettings, IconUser } from '@/ui/icons';
+  import { IconHourglass, IconPen, IconSettings, IconTrend, IconUsers } from '@/ui/icons';
 
   type MenuItem = {
     id: string;
@@ -15,10 +16,10 @@
     icon: any | null;
   };
   const menuItems: MenuItem[] = [
-    { id: 'new', text: 'New Toot', route: '/new', icon: IconDiscover },
-    { id: 'trending', text: 'Trending', route: '#/', icon: IconDiscover },
-    { id: 'timeline', text: 'Timeline', route: '/timeline', icon: IconUser },
-    { id: 'following', text: 'Following', route: '/following', icon: IconUser },
+    { id: 'new', text: 'New Toot', route: '/new', icon: IconPen },
+    { id: 'trending', text: 'Trending', route: '#/', icon: IconTrend },
+    { id: 'timeline', text: 'Timeline', route: '/timeline', icon: IconHourglass },
+    { id: 'following', text: 'Following', route: '/following', icon: IconUsers },
     { id: 'setttings', text: 'Settings', route: '/settings', icon: IconSettings },
   ];
 </script>
@@ -27,8 +28,9 @@
   <div class="header">Kaistodon</div>
   <div class="scroller" data-nav-scroller>
     {#each menuItems as item, i}
-      <ListItem
+      <ListSimpleItem
         icon={item.icon}
+        imageSize={IconSize.Small}
         primaryText={item.text}
         navi={{
           itemId: item.id,

@@ -31,7 +31,7 @@
     {#each items as item, i}
       <ListItem
         imageUrl="https://place-hold.it/32x32&text="
-        primaryText={`Primary Text ${i + 1}`}
+        contentText={`Primary Text ${i + 1}`}
         secondaryText="Secondary text"
         navi={{
           itemId: `${i + 1}`,

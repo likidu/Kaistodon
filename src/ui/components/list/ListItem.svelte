@@ -1,5 +1,5 @@
 <script lang="ts">
-  import IconDotsVertical from '@/ui/icons/IconDotsVertical.svelte';
+  import { IconDotsVertical } from '@/ui/icons';
   import type { SvelteComponent } from 'svelte';
   import { Alignment, Color, IconSize } from '../../enums';
   import type { ContextMenu, Navigation } from '../../models';
@@ -13,9 +13,9 @@
   export let icon: typeof SvelteComponent = null;
   export let iconColor: Color = Color.Primary;
   export let align: Alignment = Alignment.Middle;
-  export let primaryText: string = null;
-  export let secondaryText: string = null;
-  export let accentText: string = null;
+  export let titleText: string = null;
+  export let contentText: string = null;
+  export let subtitleText: string = null;
   export let navi: Navigation;
   export let contextMenu: ContextMenu = null;
 </script>
@@ -41,11 +41,15 @@
         />
       {/if}
       <div class="grow">
-        {#if accentText}
-          <div class="accent">{accentText}</div>
+        {#if titleText}
+          <div class="title">{titleText}</div>
         {/if}
-        {#if secondaryText}
-          <div class="secondary">{secondaryText}</div>
+        {#if subtitleText}
+          <div class="subtitle">{subtitleText}</div>
+        {:else if $$slots['subtitle']}
+          <div class="subtitle">
+            <slot name="subtitle" />
+          </div>
         {/if}
       </div>
       {#if $settings.shortcutKeyLocation === 'right' && navi.shortcutKey}
@@ -58,10 +62,10 @@
       {/if}
     </div>
     <div class="container">
-      {#if primaryText}
-        <div class="primary">{primaryText}</div>
+      {#if contentText}
+        <div class="content">{contentText}</div>
       {:else}
-        <slot name="primaryText" />
+        <slot name="content" />
       {/if}
       <slot name="bottom" />
     </div>
@@ -82,8 +86,8 @@
   .image {
     height: 30px;
     width: 30px;
-    margin-right: 10px;
-    border-radius: 3px;
+    margin-right: 6px;
+    border-radius: 5px;
   }
   .image.circle {
     border-radius: 50%;
@@ -105,19 +109,16 @@
     margin-left: 5px;
   }
 
-  .primary,
-  .secondary,
-  .accent {
+  .content,
+  .subtitle,
+  .title {
     @apply line-clamp-1;
   }
-  .primary {
-    /* font-weight: 600; */
-  }
-  .secondary {
+  .subtitle {
     font-size: 1.2rem;
     color: var(--secondary-text-color);
   }
-  .accent {
+  .title {
     font-size: 1.2rem;
     color: var(--accent-color);
   }

@@ -1,6 +1,7 @@
 <script lang="ts">
   import * as domUtils from 'domutils';
   import { parseDocument } from 'htmlparser2';
+  import Time from 'svelte-time';
 
   import Icon from '@/ui/components/icon/Icon.svelte';
   import ListItem from '@/ui/components/list/ListItem.svelte';
@@ -9,6 +10,7 @@
   import { IconComment, IconReply, IconStar } from '@/ui/icons';
   import { delay } from '@/ui/utils/delay';
 
+  import PhotoSlider from '@/lib/components/PhotoSlider.svelte';
   import { useTrendStatus } from '../services';
 
   const statuses = useTrendStatus();
@@ -38,8 +40,7 @@
       <ListItem
         imageUrl={status.account.avatarStatic}
         align={Alignment.Top}
-        accentText={status.account.displayName}
-        secondaryText={status.account.url}
+        titleText={status.account.displayName}
         navi={{ itemId: `STATUS-${i + 1}`, onSelect: () => {} }}
         contextMenu={{
           title: `Primary Text ${i + 1}`,
@@ -59,10 +60,16 @@
           ],
         }}
       >
-        <svelte:fragment slot="primaryText">
-          {@html status.content}
+        <svelte:fragment slot="subtitle">
+          {status.account.acct} &bull <Time relative timestamp={status.createdAt} />
         </svelte:fragment>
+        <div slot="content">
+          {@html status.content}
+        </div>
         <div slot="bottom">
+          {#if status.mediaAttachments.length > 0}
+            <PhotoSlider photos={status.mediaAttachments} />
+          {/if}
           <section class="stats">
             <div class="item">
               <Icon size={IconSize.Smallest} color={Color.Secondary}><IconReply /></Icon>

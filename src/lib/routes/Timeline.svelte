@@ -33,7 +33,7 @@
           <ListItem
             imageUrl={status.account.avatarStatic}
             align={Alignment.Top}
-            accentText={status.account.displayName}
+            titleText={status.account.displayName}
             secondaryText={status.account.url}
             navi={{ itemId: `timeline-${i + 1}`, onSelect: () => {} }}
             contextMenu={{
@@ -61,7 +61,7 @@
               ],
             }}
           >
-            <svelte:fragment slot="primaryText">
+            <svelte:fragment slot="content">
               {@html status.content}
             </svelte:fragment>
             <div slot="bottom">

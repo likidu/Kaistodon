@@ -19,18 +19,3 @@ export const usePublicTimeline = () =>
     },
     { staleTime: 5 * 60 * 1000 },
   );
-
-/**
- * @param limit: # of items returns
- * @returns
- */
-export const useTrendStatus = () =>
-  useQuery<mastodon.v1.Status[], Error>(
-    ['trend-status'],
-    async () => {
-      return await client.v1.trends.listStatuses({
-        limit: 10,
-      });
-    },
-    { staleTime: 5 * 60 * 1000 },
-  );

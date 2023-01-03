@@ -1,9 +1,9 @@
-import { babel, getBabelOutputPlugin } from '@rollup/plugin-babel'
-import { svelte } from '@sveltejs/vite-plugin-svelte'
-import { resolve } from 'path'
-import css from 'rollup-plugin-css-only'
-import del from 'rollup-plugin-delete'
-import { defineConfig } from 'vite'
+import { babel, getBabelOutputPlugin } from '@rollup/plugin-babel';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { resolve } from 'path';
+import css from 'rollup-plugin-css-only';
+import del from 'rollup-plugin-delete';
+import { defineConfig } from 'vite';
 
 const isLegacy = !!process.env.IS_LEGACY;
 
@@ -68,6 +68,7 @@ export default defineConfig({
   plugins: [svelte(), ...(isLegacy ? legacyPlugins : [])],
   build: {
     rollupOptions: {
+      // @ts-ignore: next-line
       output: {
         name: 'app',
         entryFileNames: `bundle.[hash].js`,

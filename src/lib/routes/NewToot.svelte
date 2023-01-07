@@ -2,7 +2,6 @@
   import { OnyxKeys } from 'onyx-keys';
 
   import TextArea from '@/ui/components/form/TextArea.svelte';
-  import LabeledRow from '@/ui/components/LabeledRow.svelte';
   import ListItem from '@/ui/components/list/ListItem.svelte';
   import SoftKey from '@/ui/components/softkey/SoftKey.svelte';
   import Typography from '@/ui/components/Typography.svelte';
@@ -14,8 +13,10 @@
   import { Onyx } from '@/ui/services';
 
   import { useUserProfile } from '@/lib/services';
+  import LabeledRow from '@/ui/components/LabeledRow.svelte';
 
   const profile = useUserProfile();
+  const limit = 10;
 
   const keyMan = OnyxKeys.subscribe(
     {
@@ -44,6 +45,16 @@
   );
 
   let toot = '';
+  $: count = () => {
+    const dom = new DOMParser().parseFromString(toot, 'text/html');
+    const text = dom.body.textContent || '';
+    // toot.trim().replace(/\s+/g, ' ').split(' ').length;
+    return text.trim().length;
+  };
+
+  function textCount() {
+    return toot.trim().replace(/\s+/g, ' ').split(' ').length;
+  }
 </script>
 
 <View>
@@ -55,7 +66,6 @@
       <Typography align="center">Error!</Typography>
     {:else}
       {@const profile = $profile.data}
-      {console.log(profile)}
       <ListItem
         imageUrl={profile.avatarStatic}
         align={Alignment.Top}
@@ -65,14 +75,8 @@
         nofocus={true}
       />
     {/if}
-    <LabeledRow label="I am tooting:">
-      <TextArea
-        value={toot}
-        placeholder="Your new toot..."
-        onChange={(val) => {
-          toot = val.toString();
-        }}
-      />
+    <LabeledRow label={`Remaining: ${(limit - count()).toString()}`}>
+      <TextArea bind:value={toot} placeholder="Your new toot..." stopAddingText={count() >= limit} />
     </LabeledRow>
   </ViewContent>
   <ViewFooter>

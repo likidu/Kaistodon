@@ -1,20 +1,18 @@
 <script lang="ts">
   import { v4 as uuidv4 } from 'uuid';
+
   import { focus } from '../../actions/focus';
   import NavItem from '../nav/NavItem.svelte';
 
   export let value: string;
+  export let stopAddingText = false;
   export let placeholder: string = undefined;
   export let disabled = false;
-  export let onChange: (val: string) => void;
   export let onSubmit: () => void = undefined;
 
   const itemId = uuidv4();
-  let focused = false;
 
-  function handleChange(ev: Event) {
-    onChange((ev.target as HTMLElement).textContent);
-  }
+  let focused = false;
 </script>
 
 <NavItem
@@ -36,16 +34,14 @@
       role="textbox"
       contenteditable
       use:focus={{ focused }}
-      on:input={handleChange}
+      bind:innerHTML={value}
       on:keydown={(ev) => {
-        if (ev.key === 'Enter') ev.preventDefault();
+        if (stopAddingText) ev.preventDefault();
+        if (ev.key === 'Enter') {
+          document.execCommand('defaultParagraphSeparator', false, 'p');
+        }
       }}
-      on:keyup={(ev) => {
-        if (ev.key === 'Enter') ev.preventDefault();
-      }}
-    >
-      {value}
-    </div>
+    />
   {/if}
 </NavItem>
 

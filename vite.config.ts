@@ -3,6 +3,8 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { resolve } from 'path';
 import css from 'rollup-plugin-css-only';
 import del from 'rollup-plugin-delete';
+import topLevelAwait from 'vite-plugin-top-level-await';
+
 import { defineConfig } from 'vite';
 
 const isLegacy = !!process.env.IS_LEGACY;
@@ -65,9 +67,17 @@ const legacyExtraConfig = {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [svelte(), ...(isLegacy ? legacyPlugins : [])],
+  plugins: [
+    svelte(),
+    topLevelAwait({
+      // The export name of top-level await promise for each chunk module
+      promiseExportName: '__tla',
+      // The function to generate import names of top-level await promise in each chunk module
+      promiseImportName: (i) => `__tla_${i}`,
+    }),
+    ...(isLegacy ? legacyPlugins : []),
+  ],
   build: {
-    target: 'esnext',
     rollupOptions: {
       // @ts-ignore: next-line
       output: {

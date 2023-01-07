@@ -1,10 +1,10 @@
 {
   "lang": "en-US",
-  "name": "Cosmos.FM",
-  "id": "cosmosfm",
-  "short_name": "cosmosfm",
+  "name": "Kaistodon",
+  "id": "kaistodon",
+  "short_name": "kaistodon",
   "categories": ["social"],
-  "description": "A Cosmos FM client for KaiOS",
+  "description": "A Mastodon client for KaiOS",
   "theme_color": "#4da8d7",
   "background_color": "#ffffff",
   "icons": [
@@ -22,8 +22,8 @@
   "start_url": "/index.html",
   "orientation": "portrait-primary",
   "b2g_features": {
-    "version": "0.2.5",
-    "subtitle": "A Cosmos FM client for KaiOS",
+    "version": "0.1.0",
+    "subtitle": "A Mastodon client for KaiOS",
     "type": "signed",
     "csp": "default-src *; script-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline'",
     "permissions": {

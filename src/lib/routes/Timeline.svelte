@@ -18,8 +18,8 @@
 
 <View>
   <ViewHeader>
-    <a href="#">Public</a>
-    <a href="#">Federated</a>
+    <a href="/">Public</a>
+    <a href="/">Federated</a>
   </ViewHeader>
   <ViewContent>
     {#if $timeline.status === 'loading'}
@@ -92,11 +92,3 @@
     </SoftKey>
   </ViewFooter>
 </View>
-
-<style lang="postcss">
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-  }
-</style>

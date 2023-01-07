@@ -67,6 +67,7 @@ const legacyExtraConfig = {
 export default defineConfig({
   plugins: [svelte(), ...(isLegacy ? legacyPlugins : [])],
   build: {
+    target: 'esnext',
     rollupOptions: {
       // @ts-ignore: next-line
       output: {

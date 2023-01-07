@@ -11,13 +11,16 @@
 
   let working: string | null = null;
 
-  const keyMan = OnyxKeys.subscribe({
-    onSoftLeft: async () => {},
-    onSoftLeftLong: async () => {},
-    onSoftRight: async () => {
-      Onyx.contextMenu.close();
+  const keyMan = OnyxKeys.subscribe(
+    {
+      onSoftLeft: async () => {},
+      onSoftLeftLong: async () => {},
+      onSoftRight: async () => {
+        Onyx.contextMenu.close();
+      },
     },
-  });
+    { priority: 4 },
+  );
 
   onDestroy(() => keyMan.unsubscribe());
 </script>

@@ -8,7 +8,7 @@
 
   import AppMenu from '@/lib/components/AppMenu.svelte';
 
-  import { Comment, Login, NotFound, Settings, Timeline, Trend } from '@/lib/routes';
+  import { Comment, Login, NewToot, NotFound, Settings, Timeline, Trend } from '@/lib/routes';
   import { settings } from '@/lib/stores/settings';
 
   const queryClient = new QueryClient();
@@ -17,6 +17,7 @@
     '/trend': Trend,
     '/trend/statuses': Trend,
     '/trend/tags': Trend,
+    '/new': NewToot,
     '/login': Login,
     '/timeline': Timeline,
     '/settings': Settings,

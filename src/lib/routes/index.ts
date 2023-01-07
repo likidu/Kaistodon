@@ -1,6 +1,7 @@
 export { default as Comment } from './Comment.svelte';
 export { default as Federated } from './Federated.svelte';
 export { default as Login } from './Login.svelte';
+export { default as NewToot } from './NewToot.svelte';
 export { default as NotFound } from './NotFound.svelte';
 export { default as Public } from './Public.svelte';
 export { default as Settings } from './Settings.svelte';

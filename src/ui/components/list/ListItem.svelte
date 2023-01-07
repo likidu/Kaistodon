@@ -18,9 +18,10 @@
   export let subtitleText: string = null;
   export let navi: Navigation;
   export let contextMenu: ContextMenu = null;
+  export let nofocus = false;
 </script>
 
-<NavItem {navi} {contextMenu}>
+<NavItem {navi} {contextMenu} {nofocus}>
   <div class="root" style={`align-items: ${align}`}>
     <div class="flex flex-row justify-between w-full">
       {#if $settings.shortcutKeyLocation === 'left' && navi.shortcutKey}

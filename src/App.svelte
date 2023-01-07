@@ -8,15 +8,15 @@
 
   import AppMenu from '@/lib/components/AppMenu.svelte';
 
-  import { Comment, Login, NotFound, Settings, Timeline, Trending } from '@/lib/routes';
+  import { Comment, Login, NotFound, Settings, Timeline, Trend } from '@/lib/routes';
   import { settings } from '@/lib/stores/settings';
 
   const queryClient = new QueryClient();
 
   const routes = {
-    '/trending': Trending,
-    '/trending/status': Trending,
-    '/trending/tags': Trending,
+    '/trend': Trend,
+    '/trend/statuses': Trend,
+    '/trend/tags': Trend,
     '/login': Login,
     '/timeline': Timeline,
     '/settings': Settings,
@@ -46,7 +46,7 @@
 
   $: Onyx.settings.update($settings);
 
-  $: if ($location === '/') replace('/trending');
+  $: if ($location === '/') replace('/trend');
 </script>
 
 <OnyxApp>

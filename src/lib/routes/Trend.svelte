@@ -12,29 +12,29 @@
   import ViewFooter from '@/ui/components/view/ViewFooter.svelte';
   import ViewHeader from '@/ui/components/view/ViewHeader.svelte';
   import { IconSize } from '@/ui/enums';
-  import { IconMenu } from '@/ui/icons';
+  import { IconDotsVertical, IconMenu } from '@/ui/icons';
 
-  import { Statuses, Tags } from '@/lib/routes';
+  import { Tags, TrendStatuses } from '@/lib/routes';
 
-  const prefix = '/trending';
+  const prefix = '/trend';
   const routes = {
-    '/status': Statuses,
+    '/statuses': TrendStatuses,
     '/tags': Tags,
   };
 
   const keyMan = OnyxKeys.subscribe(
     {
       onArrowLeft: async () => {
-        if ($location === '/trending/tags') push('/trending/status');
+        if ($location === `${prefix}/tags`) push(`${prefix}/statuses`);
       },
       onArrowRight: async () => {
-        if ($location === '/trending/status') push('/trending/tags');
+        if ($location === `${prefix}/statuses`) push(`${prefix}/tags`);
       },
     },
     { priority: 3 },
   );
 
-  $: if ($location === '/trending') replace('/trending/status');
+  $: if ($location === prefix) replace(`${prefix}/statuses`);
 
   onDestroy(() => keyMan.unsubscribe());
 </script>
@@ -42,8 +42,8 @@
 <View>
   <ViewHeader>
     <ul class="sub-route">
-      <li use:active={'/trending/status'}>Status</li>
-      <li use:active={'/trending/tags'}>Tags</li>
+      <li use:active={`${prefix}/statuses`}>Status</li>
+      <li use:active={`${prefix}/tags`}>Tags</li>
     </ul>
   </ViewHeader>
   <ViewContent>
@@ -54,7 +54,7 @@
   <ViewFooter>
     <SoftKey>
       <div><Icon size={IconSize.Small}><IconMenu /></Icon></div>
-      <div><Icon size={IconSize.Small}><IconMenu /></Icon></div>
+      <div><Icon size={IconSize.Small}><IconDotsVertical /></Icon></div>
     </SoftKey>
   </ViewFooter>
 </View>

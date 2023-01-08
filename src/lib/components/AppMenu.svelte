@@ -17,7 +17,7 @@
   };
   const menuItems: MenuItem[] = [
     { id: 'new', text: 'New Toot', route: '/new', icon: IconPen },
-    { id: 'trending', text: 'Trending', route: '#/', icon: IconTrend },
+    { id: 'trend', text: 'Trending', route: '/trend', icon: IconTrend },
     { id: 'timeline', text: 'Timeline', route: '/timeline', icon: IconHourglass },
     { id: 'following', text: 'Following', route: '/following', icon: IconUsers },
     { id: 'setttings', text: 'Settings', route: '/settings', icon: IconSettings },

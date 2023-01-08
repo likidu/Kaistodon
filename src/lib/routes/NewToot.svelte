@@ -30,6 +30,8 @@
             {
               label: 'Image',
               onSelect: async () => {
+                // TODO: Update KaiOS lib to support this type
+                // @ts-ignore: next line
                 const picker = new WebActivity('pick', { type: 'image' });
                 try {
                   const photo = await picker.start();
@@ -46,7 +48,7 @@
             {
               label: 'Discard',
               onSelect: () => {
-                replace('/');
+                replace('/trend');
               },
             },
           ],

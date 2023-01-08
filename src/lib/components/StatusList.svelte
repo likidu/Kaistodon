@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { useInfiniteQuery } from '@sveltestack/svelte-query';
+  import type { QueryKey, UseInfiniteQueryStoreResult } from '@sveltestack/svelte-query';
   import type { mastodon } from 'masto';
   import Time from 'svelte-time';
 
@@ -13,17 +13,7 @@
 
   import PhotoSlider from '@/lib/components/PhotoSlider.svelte';
 
-  export let queryKey: string;
-  // {querykey, pageParam} are what pass to the queryFn
-  export let queryFn: ({ pageParam }: any) => Promise<mastodon.v1.Status[]>;
-
-  const statuses = useInfiniteQuery<mastodon.v1.Status[], Error>([queryKey], queryFn, {
-    // After first call, always return true to call next() function
-    getNextPageParam: () => {
-      return true;
-    },
-    staleTime: 5 * 60 * 1000,
-  });
+  export let queryResult: UseInfiniteQueryStoreResult<mastodon.v1.Status[], Error, mastodon.v1.Status[], QueryKey>;
 
   function parseHtml(html: string): { seralized: string; links: string[] } {
     let links = [];
@@ -66,12 +56,12 @@
   }
 </script>
 
-{#if $statuses.status === 'loading'}
+{#if $queryResult.status === 'loading'}
   <Typography align="center">Loading...</Typography>
-{:else if $statuses.status === 'error'}
+{:else if $queryResult.status === 'error'}
   <Typography align="center">Error!</Typography>
 {:else}
-  {#each $statuses.data.pages as page, i}
+  {#each $queryResult.data.pages as page, i}
     {#each page as status, j}
       {#if status.visibility === 'public'}
         {@const { seralized, links } = parseHtml(status.content)}
@@ -81,18 +71,26 @@
           titleText={status.account.displayName}
           navi={{ itemId: `STATUS-${i + 1}-${j + 1}`, onSelect: () => {} }}
           contextMenu={{
-            title: `Primary Text ${i + 1} - ${j + 1}`,
+            title: `${status.account.displayName}'s Status`,
             items: [
               {
                 label: links[0],
-                workingLabel: 'Working...',
+                workingLabel: 'Opening URL...',
                 onSelect: async () => {
-                  console.log('context menu item 1');
-                  await delay(1000);
+                  if (links[0]) {
+                    // TODO: Update KaiOS lib to support this type
+                    // @ts-ignore: next line
+                    const view = new WebActivity('view', {
+                      type: 'url',
+                      url: links[0],
+                    });
+                    view.start();
+                    await delay(1000);
+                  }
                 },
               },
               {
-                label: 'Context Menu Item 3',
+                label: `🙆‍♂️ ${status.account.acct}`,
                 onSelect: () => console.log('context menu item 3'),
               },
             ],
@@ -131,7 +129,7 @@
     title="Load more"
     navi={{
       itemId: 'STATUS_LOAD_MORE',
-      onSelect: () => $statuses.fetchNextPage(),
+      onSelect: () => $queryResult.fetchNextPage(),
     }}
   />
 {/if}

@@ -3,5 +3,5 @@
 </script>
 
 <ViewContent>
-  <div class="">Federated Timeline</div>
+  <div class="">Federated Timeline...</div>
 </ViewContent>

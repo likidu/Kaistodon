@@ -14,12 +14,12 @@
   import { IconSize } from '@/ui/enums';
   import { IconDotsVertical, IconMenu } from '@/ui/icons';
 
-  import { Tags, TrendStatuses } from '@/lib/routes';
+  import { TrendStatuses, TrendTags } from '@/lib/routes';
 
   const prefix = '/trend';
   const routes = {
     '/statuses': TrendStatuses,
-    '/tags': Tags,
+    '/tags': TrendTags,
   };
 
   const keyMan = OnyxKeys.subscribe(

@@ -28,7 +28,7 @@ export const usePublicTimeline = () =>
     async () => {
       return await client.v1.timelines.listPublic({
         local: true,
-        limit: 10,
+        limit: 5,
       });
     },
     { staleTime: 5 * 60 * 1000 },

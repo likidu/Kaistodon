@@ -21,6 +21,8 @@
     '/new': NewToot,
     '/login': Login,
     '/timeline': Timeline,
+    '/timeline/public': Timeline,
+    '/timeline/federated': Timeline,
     '/settings': Settings,
     '/comment/:id': Comment,
     '*': NotFound,

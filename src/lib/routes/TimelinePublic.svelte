@@ -5,8 +5,9 @@
   import StatusList from '@/lib/components/StatusList.svelte';
   import { client } from '@/lib/services';
 
-  const statuses = client.v1.trends.listStatuses({
-    limit: 3,
+  const statuses = client.v1.timelines.listPublic({
+    local: true,
+    limit: 5,
   });
 
   async function getStatuses(pageParam: boolean): Promise<mastodon.v1.Status[]> {
@@ -21,7 +22,7 @@
 
   // {querykey, pageParam} are what pass to the queryFn
   const queryResult = useInfiniteQuery<mastodon.v1.Status[], Error>(
-    ['trend-status'],
+    ['timeline-public'],
     ({ pageParam }) => getStatuses(pageParam),
     {
       // After first call, always return true to call next() function

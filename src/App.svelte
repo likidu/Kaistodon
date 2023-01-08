@@ -10,7 +10,7 @@
 
   import AppMenu from '@/lib/components/AppMenu.svelte';
   import { Comment, Login, NewToot, NotFound, Settings, Timeline, Trend } from '@/lib/routes';
-  import { settings } from '@/lib/stores/settings';
+  import { settings, token } from '@/lib/stores';
 
   const queryClient = new QueryClient();
 
@@ -50,7 +50,10 @@
 
   $: Onyx.settings.update($settings);
 
+  // Trend is the default route
   $: if ($location === '/') replace('/trend');
+
+  $: if (!$token) replace('/login');
 
   onMount(() => {
     register('/sw.js', {

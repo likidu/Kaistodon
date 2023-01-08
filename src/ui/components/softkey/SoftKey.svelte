@@ -9,7 +9,7 @@
   .softkey > div:first-child {
     @apply flex justify-start w-full;
   }
-  .softkey > div:nth-child(2) {
+  .softkey > div:nth-child(2):not(:last-child) {
     @apply flex justify-center font-bold text-center uppercase mx-auto;
   }
   .softkey > div:last-child {

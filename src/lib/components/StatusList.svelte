@@ -101,7 +101,7 @@
           <svelte:fragment slot="subtitle">
             {status.account.acct} &bull <Time relative timestamp={status.createdAt} />
           </svelte:fragment>
-          <div slot="content">
+          <div class="status-content" slot="content">
             {@html seralized}
           </div>
           <div slot="bottom">
@@ -135,3 +135,9 @@
     }}
   />
 {/if}
+
+<style global lang="postcss">
+  .status-content > p:not(:first-child) {
+    @apply mt-2;
+  }
+</style>

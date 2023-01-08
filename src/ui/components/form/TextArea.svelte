@@ -34,11 +34,19 @@
       role="textbox"
       contenteditable
       use:focus={{ focused }}
-      bind:innerHTML={value}
+      bind:textContent={value}
       on:keydown={(ev) => {
         if (stopAddingText) ev.preventDefault();
         if (ev.key === 'Enter') {
-          document.execCommand('defaultParagraphSeparator', false, 'p');
+          // TODO: use not obsolete APIs for this
+          // document.execCommand('defaultParagraphSeparator', false, 'p');
+          ev.preventDefault();
+        }
+      }}
+      on:keyup={(ev) => {
+        if (stopAddingText) ev.preventDefault();
+        if (ev.key === 'Enter') {
+          ev.preventDefault();
         }
       }}
     />
@@ -48,7 +56,7 @@
 <style>
   .input,
   .placeholder {
-    min-height: 24px;
+    min-height: 33px;
     min-width: 10px;
     display: flex;
     flex-direction: column;

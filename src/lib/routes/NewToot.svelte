@@ -1,7 +1,9 @@
 <script lang="ts">
   import { OnyxKeys } from 'onyx-keys';
+  import { replace } from 'svelte-spa-router';
 
   import TextArea from '@/ui/components/form/TextArea.svelte';
+  import LabeledRow from '@/ui/components/LabeledRow.svelte';
   import ListItem from '@/ui/components/list/ListItem.svelte';
   import SoftKey from '@/ui/components/softkey/SoftKey.svelte';
   import Typography from '@/ui/components/Typography.svelte';
@@ -12,11 +14,12 @@
   import { Alignment } from '@/ui/enums';
   import { Onyx } from '@/ui/services';
 
-  import { useUserProfile } from '@/lib/services';
-  import LabeledRow from '@/ui/components/LabeledRow.svelte';
+  import { client, useUserProfile } from '@/lib/services';
+
+  let toot = '';
 
   const profile = useUserProfile();
-  const limit = 10;
+  const limit = 500;
 
   const keyMan = OnyxKeys.subscribe(
     {
@@ -26,7 +29,13 @@
           items: [
             {
               label: 'Image',
-              onSelect: () => {
+              onSelect: async () => {
+                const picker = new WebActivity('pick', { type: 'image' });
+                try {
+                  const photo = await picker.start();
+                  console.log('Results passed back from activity handler:');
+                  console.log(photo);
+                } catch (error) {}
                 Onyx.contextMenu.close();
               },
             },
@@ -34,27 +43,42 @@
               label: 'Poll',
               onSelect: () => {},
             },
+            {
+              label: 'Discard',
+              onSelect: () => {
+                replace('/');
+              },
+            },
           ],
         });
       },
       onSoftRight: async () => {
-        if (toot !== '') console.log(toot);
+        if (toot !== '') {
+          try {
+            const status = await client.v1.statuses.create({
+              status: toot,
+              visibility: 'public',
+            });
+            if (status.id) {
+              Onyx.toaster.show({ type: 'success', title: 'New toot published.' });
+              replace('/');
+            }
+          } catch (error) {
+            Onyx.toaster.show({ type: 'error', title: `New toot publish error: ${error}` });
+          }
+        }
       },
     },
     { priority: 3 },
   );
 
-  let toot = '';
+  // Counting the remaining allowed chars
+  // TODO: This is slow, looking for optimized solution
   $: count = () => {
     const dom = new DOMParser().parseFromString(toot, 'text/html');
     const text = dom.body.textContent || '';
-    // toot.trim().replace(/\s+/g, ' ').split(' ').length;
     return text.trim().length;
   };
-
-  function textCount() {
-    return toot.trim().replace(/\s+/g, ' ').split(' ').length;
-  }
 </script>
 
 <View>
@@ -82,7 +106,6 @@
   <ViewFooter>
     <SoftKey>
       <div>Options</div>
-      <div>Enter</div>
       <div>Publish</div>
     </SoftKey>
   </ViewFooter>

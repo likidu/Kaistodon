@@ -1,13 +1,14 @@
 <script lang="ts">
   import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
+  import { OnyxKeys } from 'onyx-keys';
+  import { register } from 'register-service-worker';
+  import { onMount } from 'svelte';
   import Router, { location, pop, replace } from 'svelte-spa-router';
 
   import OnyxApp from '@/ui/components/app/OnyxApp.svelte';
   import { Onyx } from '@/ui/services';
-  import { OnyxKeys } from 'onyx-keys';
 
   import AppMenu from '@/lib/components/AppMenu.svelte';
-
   import { Comment, Login, NewToot, NotFound, Settings, Timeline, Trend } from '@/lib/routes';
   import { settings } from '@/lib/stores/settings';
 
@@ -48,6 +49,21 @@
   $: Onyx.settings.update($settings);
 
   $: if ($location === '/') replace('/trend');
+
+  onMount(() => {
+    register('/sw.js', {
+      registrationOptions: { scope: './' },
+      ready(registration) {
+        console.log('Service worker is active.');
+      },
+      registered(registration) {
+        console.log('Service worker is registered!');
+      },
+      error(error) {
+        console.error('Error during service worker registration:', error);
+      },
+    });
+  });
 </script>
 
 <OnyxApp>

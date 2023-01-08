@@ -46,6 +46,27 @@
       "wifidata": {},
       "geolocation": {}
     },
+    "serviceworker": {
+      "script_url": "sw.js"
+    },
+    "activities": {
+      "share": {
+        "filters": {
+          "type": ["image/jpeg", "image/png", "image/gif"]
+        },
+        "href": "index.html",
+        "disposition": "window",
+        "returnValue": true
+      },
+      "kaiteCallback": {
+        "filters": {
+          "code": {
+            "required": true
+          }
+        },
+        "returnValue": true
+      }
+    },
     "focus_color": "#4da8d7",
     "developer": {
       "name": "Liki Du",

@@ -8,16 +8,16 @@ import { writable } from 'svelte/store';
  * @param initStore
  * @returns Store<T>
  */
-function createStore<T>(key: 'user' | 'auth', initStore: T) {
+function createStore<T>(key: 'auth', initStore: T, itemKey: string) {
   const { subscribe, update, set } = writable<T>(initStore);
 
   subscribe((val) => {
-    Storage.set(key, val);
+    Storage.setItem(key, val, itemKey);
   });
 
   return {
     subscribe,
-    update: function (data: Partial<T>) {
+    update: function (data: T) {
       update((previous) => ({ ...previous, ...data }));
     },
     reset: function () {
@@ -26,5 +26,5 @@ function createStore<T>(key: 'user' | 'auth', initStore: T) {
   };
 }
 
-const storedToken = Storage.get<Token>('auth');
-export const token = createStore<Token>('auth', storedToken);
+const storedTokens = Storage.get<Token>('auth');
+export const tokens = createStore<Token>('auth', storedTokens, 'instance');

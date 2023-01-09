@@ -32,12 +32,11 @@
       navi={{
         itemId: 'SIGN_IN',
         onSelect: async () => {
-          console.log(instance);
           // TODO: Update KaiOS lib to support this type
           // @ts-ignore: next line
           const view = new WebActivity('view', {
             type: 'url',
-            url: `${instance}/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL_LOCAL}&scope=read write follow push`,
+            url: `https://${instance}/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL_LOCAL}&scope=read write follow push`,
           });
           view.start();
         },

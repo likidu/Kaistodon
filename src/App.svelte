@@ -9,8 +9,8 @@
   import { Onyx } from '@/ui/services';
 
   import AppMenu from '@/lib/components/AppMenu.svelte';
-  import { Comment, Login, NewToot, NotFound, Settings, Timeline, Trend } from '@/lib/routes';
-  import { settings, token } from '@/lib/stores';
+  import { Comment, Login, NewToot, NotFound, OAuth, Settings, Timeline, Trend } from '@/lib/routes';
+  import { settings, tokens } from '@/lib/stores';
 
   const queryClient = new QueryClient();
 
@@ -20,6 +20,7 @@
     '/trend/tags': Trend,
     '/new': NewToot,
     '/login': Login,
+    '/oauth/:code': OAuth,
     '/timeline': Timeline,
     '/timeline/public': Timeline,
     '/timeline/federated': Timeline,
@@ -50,12 +51,8 @@
 
   $: Onyx.settings.update($settings);
 
-  // Trend is the default route
-  $: if ($location === '/') replace('/trend');
-
-  $: if (!$token) replace('/login');
-
-  onMount(() => {
+  $: onMount(() => {
+    // Register service worker
     register('/sw.js', {
       registrationOptions: { scope: './' },
       ready(registration) {
@@ -68,6 +65,21 @@
         console.error('Error during service worker registration:', error);
       },
     });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      replace(`/oauth/${code}`);
+      return;
+    }
+
+    if (!$tokens) {
+      replace('/login');
+      return;
+    }
+
+    // Trend is the default route
+    if ($location === '/') replace('/trend');
   });
 </script>
 

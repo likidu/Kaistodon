@@ -1,7 +1,12 @@
 import { login } from 'masto';
+import { get } from 'svelte/store';
+
+import { tokens } from '@/lib/stores';
+
+const { instance, token } = get(tokens);
 
 export const client = await login({
-  url: 'https://m.cmx.im',
+  url: `https://${instance}`,
   // accessToken: 'fM-4XXGcYHkJfAN7mM0Ap2OnX79UozEzjf7jd8ReXnY',
-  accessToken: 'iHudaJmvz-ZtaAv_pwQNFHn7YYiXDCBKdyeQsUmHB1Q',
+  accessToken: token,
 });

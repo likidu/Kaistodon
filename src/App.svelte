@@ -29,6 +29,12 @@
     '*': NotFound,
   };
 
+  // TODO: Fix this in a better way
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Backspace' && $location !== '/' && (ev.target as any).contentEditable !== 'true') {
+      ev.preventDefault();
+    }
+  });
   const keyMan = OnyxKeys.subscribe(
     {
       onBackspace: async () => {
@@ -73,7 +79,8 @@
       return;
     }
 
-    if (!$tokens) {
+    const { token } = $tokens.find((t) => t.instance === $settings.instance);
+    if (token === '') {
       replace('/login');
       return;
     }

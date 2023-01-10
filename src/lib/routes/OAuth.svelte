@@ -6,13 +6,13 @@
   import View from '@/ui/components/view/View.svelte';
   import ViewContent from '@/ui/components/view/ViewContent.svelte';
 
-  import { CLIENT_ID, CLIENT_SECRET, Instance, REDIRECT_URL_LOCAL } from '@/lib/configs';
+  import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URL_LOCAL } from '@/lib/configs';
   import type { TokenRequest } from '@/lib/models';
-  import { tokens } from '@/lib/stores';
+  import { settings, tokens } from '@/lib/stores';
 
   export let code: string;
 
-  let instance: string = Instance.CMX;
+  const { instance } = $settings;
 
   onMount(async () => {
     if (!code) return;
@@ -34,6 +34,7 @@
       body: JSON.stringify(request),
     });
     const { token } = await response.json();
+    // Update instance's token in Local Storage
     console.log('Token: ', token);
     tokens.update({ instance, token });
 

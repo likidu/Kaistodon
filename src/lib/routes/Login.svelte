@@ -8,6 +8,8 @@
   import SelectRow from '@/ui/components/form/SelectRow.svelte';
   import { CLIENT_ID, Instance, REDIRECT_URL_LOCAL } from '../configs';
 
+  import { settings } from '../stores';
+
   let instance: string = Instance.CMX;
 </script>
 
@@ -32,6 +34,8 @@
       navi={{
         itemId: 'SIGN_IN',
         onSelect: async () => {
+          // Update current instance in Local Storage
+          settings.update({ instance });
           // TODO: Update KaiOS lib to support this type
           // @ts-ignore: next line
           const view = new WebActivity('view', {

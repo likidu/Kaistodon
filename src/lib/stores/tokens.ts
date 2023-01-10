@@ -1,9 +1,10 @@
+import { get, writable } from 'svelte/store';
+
 import { Storage } from '@/ui/services';
 
+import { addOrReplace } from '@/lib/helpers';
 import type { Token } from '@/lib/models';
 import { settings } from '@/lib/stores';
-
-import { get, writable } from 'svelte/store';
 
 /**
  * @summary Create store for user and tokens and save them to LocalStorage
@@ -11,17 +12,21 @@ import { get, writable } from 'svelte/store';
  * @param initStore
  * @returns Store<T>
  */
-function createStore<T>(initStore: T[]) {
-  const { subscribe, update, set } = writable<T[]>(initStore);
+function createStore() {
+  const storedTokens = Storage.get<Token[]>(storageKey);
+
+  const initStore = storedTokens ? addOrReplace(storedTokens, 'instance', initToken) : [initToken];
+  const { subscribe, update, set } = writable(initStore);
 
   subscribe((val) => {
-    Storage.setItem(storageKey, val, itemKey);
+    Storage.set(storageKey, val);
   });
 
   return {
     subscribe,
-    update: function (data: T) {
-      update((previous) => ({ ...previous, ...data }));
+    update: function (data: Token) {
+      // update((previous) => ({ ...previous, ...data }));
+      update((previous) => addOrReplace(previous, 'instance', data));
     },
     reset: function () {
       set(null);
@@ -32,11 +37,11 @@ function createStore<T>(initStore: T[]) {
 // const addOrReplace = (arr, newObj) => [...arr.filter((o) => o.uid !== newObj.uid), {...newObj}];
 const storageKey = 'auth';
 
+// Initialize
 const { instance } = get(settings);
 const initToken: Token = {
   instance,
   token: '',
 };
-const storedTokens = Storage.get<Token[]>(storageKey);
-const initStore = [...storedTokens.filter((o) => o.instance !== initToken.instance), { ...initToken }];
-export const tokens = createStore<Token>(initStore);
+
+export const tokens = createStore();

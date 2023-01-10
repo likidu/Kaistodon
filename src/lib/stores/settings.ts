@@ -3,10 +3,12 @@ import { writable } from 'svelte/store';
 import { Animations, Density, TextSize, TextWeight } from '@/ui/enums';
 import { Storage } from '@/ui/services';
 
+import { Instance, themes } from '@/lib/configs';
 import type { Settings } from '@/lib/models';
-import { themes } from '@/lib/configs/themes';
 
 const defaultSettings: Partial<Settings> = {
+  instance: Instance.CMX,
+  // Theme
   themeId: themes[2].id,
   textSize: TextSize.Medium,
   textWeight: TextWeight.Medium,

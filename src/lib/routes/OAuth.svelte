@@ -10,10 +10,12 @@
   import type { TokenRequest } from '@/lib/models';
   import { settings, tokens } from '@/lib/stores';
 
+  export let params: { code: string };
+
+  const { code } = params;
   const { instance } = $settings;
 
   onMount(async () => {
-    const code = window.location.search.split('code=')[1];
     if (!code) return;
 
     const request: TokenRequest = {
@@ -45,5 +47,6 @@
 <View>
   <ViewContent>
     <Typography align="center">Sign in to cmx.im...</Typography>
+    <p>{code}</p>
   </ViewContent>
 </View>

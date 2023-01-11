@@ -20,7 +20,7 @@
     '/trend/tags': Trend,
     '/new': NewToot,
     '/login': Login,
-    '/oauth': OAuth,
+    '/oauth/:code': OAuth,
     '/timeline': Timeline,
     '/timeline/public': Timeline,
     '/timeline/federated': Timeline,
@@ -76,7 +76,7 @@
     const code = urlParams.get('code');
     if (code) {
       console.log('OAuth flow...');
-      replace(`/oauth?code=${code}`);
+      replace(`/oauth/${code}`);
       return;
     }
 

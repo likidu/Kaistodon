@@ -20,7 +20,7 @@
     '/trend/tags': Trend,
     '/new': NewToot,
     '/login': Login,
-    '/oauth/:code': OAuth,
+    '/oauth': OAuth,
     '/timeline': Timeline,
     '/timeline/public': Timeline,
     '/timeline/federated': Timeline,
@@ -75,12 +75,14 @@
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     if (code) {
-      replace(`/oauth/${code}`);
+      console.log('OAuth flow...');
+      replace(`/oauth/code=${code}`);
       return;
     }
 
     const { token } = $tokens.find((t) => t.instance === $settings.instance);
     if (token === '') {
+      console.log('Not signed in...');
       replace('/login');
       return;
     }

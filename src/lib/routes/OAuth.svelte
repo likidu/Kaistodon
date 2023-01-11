@@ -10,11 +10,10 @@
   import type { TokenRequest } from '@/lib/models';
   import { settings, tokens } from '@/lib/stores';
 
-  export let code: string;
-
   const { instance } = $settings;
 
   onMount(async () => {
+    const code = window.location.search.split('code=')[1];
     if (!code) return;
 
     const request: TokenRequest = {

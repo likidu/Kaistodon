@@ -76,7 +76,7 @@
     const code = urlParams.get('code');
     if (code) {
       console.log('OAuth flow...');
-      replace(`/oauth/code=${code}`);
+      replace(`/oauth?code=${code}`);
       return;
     }
 

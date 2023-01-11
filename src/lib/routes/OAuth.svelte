@@ -33,6 +33,7 @@
       },
       body: JSON.stringify(request),
     });
+    console.log(response);
     const { token } = await response.json();
     // Update instance's token in Local Storage
     console.log('Token: ', token);
@@ -45,5 +46,6 @@
 <View>
   <ViewContent>
     <Typography align="center">Sign in to cmx.im...</Typography>
+    <p>{code}</p>
   </ViewContent>
 </View>

@@ -45,6 +45,5 @@
 <View>
   <ViewContent>
     <Typography align="center">Sign in to cmx.im...</Typography>
-    <p>{code}</p>
   </ViewContent>
 </View>

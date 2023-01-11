@@ -6,7 +6,7 @@
   import ViewHeader from '@/ui/components/view/ViewHeader.svelte';
 
   import SelectRow from '@/ui/components/form/SelectRow.svelte';
-  import { CLIENT_ID, Instance, REDIRECT_URL_LOCAL } from '../configs';
+  import { CLIENT_ID, Instance, REDIRECT_URL } from '../configs';
 
   import { settings } from '../stores';
 
@@ -40,7 +40,7 @@
           // @ts-ignore: next line
           const view = new WebActivity('view', {
             type: 'url',
-            url: `https://${instance}/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL_LOCAL}&scope=read write follow push`,
+            url: `https://${instance}/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL}&scope=read write follow push`,
           });
           view.start();
         },

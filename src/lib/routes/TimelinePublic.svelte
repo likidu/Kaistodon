@@ -3,9 +3,9 @@
   import type { mastodon } from 'masto';
 
   import StatusList from '@/lib/components/StatusList.svelte';
-  import { client } from '@/lib/services';
+  import { masto } from '@/lib/services';
 
-  const statuses = client.v1.timelines.listPublic({
+  const statuses = masto.v1.timelines.listPublic({
     local: true,
     limit: 5,
   });

@@ -14,7 +14,7 @@
   import { Alignment } from '@/ui/enums';
   import { Onyx } from '@/ui/services';
 
-  import { client, useUserProfile } from '@/lib/services';
+  import { masto, useUserProfile } from '@/lib/services';
 
   let toot = '';
 
@@ -57,7 +57,7 @@
       onSoftRight: async () => {
         if (toot !== '') {
           try {
-            const status = await client.v1.statuses.create({
+            const status = await masto.v1.statuses.create({
               status: toot,
               visibility: 'public',
             });

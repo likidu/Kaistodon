@@ -1,4 +1,5 @@
 <script lang="ts">
+  import axios from 'axios';
   import { onMount } from 'svelte';
   import { replace } from 'svelte-spa-router';
 
@@ -26,13 +27,20 @@
       code,
       grant_type: 'authorization_code',
     };
-    const response = await fetch(`https://${instance}/oath/token`, {
-      method: 'POST',
+
+    // const response = await fetch(`https://${instance}/oath/token`, {
+    //   method: 'POST',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json; charset=utf-8',
+    //   },
+    //   body: JSON.stringify(request),
+    // });
+    const response = await axios.post(`https://${instance}/oath/token`, request, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json; charset=utf-8',
       },
-      body: JSON.stringify(request),
     });
     console.log(response);
     const { token } = await response.json();

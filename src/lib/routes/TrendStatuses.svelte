@@ -3,9 +3,9 @@
   import type { mastodon } from 'masto';
 
   import StatusList from '@/lib/components/StatusList.svelte';
-  import { client } from '@/lib/services';
+  import { masto } from '@/lib/services';
 
-  const statuses = client.v1.trends.listStatuses({
+  const statuses = masto.v1.trends.listStatuses({
     limit: 3,
   });
 

@@ -1,7 +1,7 @@
 import { useQuery } from '@sveltestack/svelte-query';
 import type { mastodon } from 'masto';
 
-import { client } from './client';
+import { masto } from './client';
 
 /**
  * @returns AccountCredentials
@@ -10,7 +10,7 @@ export const useUserProfile = () =>
   useQuery(
     ['user-profile'],
     async () => {
-      return await client.v1.accounts.verifyCredentials();
+      return await masto.v1.accounts.verifyCredentials();
     },
     {
       staleTime: 15 * 60 * 1000,
@@ -26,7 +26,7 @@ export const usePublicTimeline = () =>
   useQuery<mastodon.v1.Status[], Error>(
     ['timeline'],
     async () => {
-      return await client.v1.timelines.listPublic({
+      return await masto.v1.timelines.listPublic({
         local: true,
         limit: 5,
       });

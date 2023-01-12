@@ -9,12 +9,13 @@
   import { Onyx } from '@/ui/services';
 
   import AppMenu from '@/lib/components/AppMenu.svelte';
-  import { Comment, Login, NewToot, NotFound, OAuth, Settings, Timeline, Trend } from '@/lib/routes';
+  import { Home, Login, NewToot, NotFound, OAuth, Settings, Timeline, Trend } from '@/lib/routes';
   import { settings, tokens } from '@/lib/stores';
 
   const queryClient = new QueryClient();
 
   const routes = {
+    '/': Home,
     '/trend': Trend,
     '/trend/statuses': Trend,
     '/trend/tags': Trend,
@@ -25,7 +26,6 @@
     '/timeline/public': Timeline,
     '/timeline/federated': Timeline,
     '/settings': Settings,
-    '/comment/:id': Comment,
     '*': NotFound,
   };
 
@@ -88,7 +88,7 @@
     }
 
     // Trend is the default route
-    if ($location === '/') replace('/trend');
+    // if ($location === '/') replace('/trend');
   });
 </script>
 

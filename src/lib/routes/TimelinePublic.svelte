@@ -5,12 +5,20 @@
   import StatusList from '@/lib/components/StatusList.svelte';
   import { masto } from '@/lib/services';
 
-  const statuses = masto.v1.timelines.listPublic({
-    local: true,
-    limit: 5,
-  });
+  let statuses;
+  $: if ($masto) {
+    statuses = $masto.v1.timelines.listPublic({
+      local: true,
+      limit: 5,
+    });
+  }
 
-  async function getStatuses(pageParam: boolean): Promise<mastodon.v1.Status[]> {
+  /**
+   * Common function to get statuses
+   * @param pageParam: call next page
+   * @returns Status[]
+   */
+  const getStatuses = async (pageParam: boolean): Promise<mastodon.v1.Status[]> => {
     console.log('triggered, next is', pageParam);
     if (pageParam) {
       const { value } = await statuses.next();
@@ -18,7 +26,7 @@
     } else {
       return await statuses;
     }
-  }
+  };
 
   // {querykey, pageParam} are what pass to the queryFn
   const queryResult = useInfiniteQuery<mastodon.v1.Status[], Error>(
@@ -34,4 +42,6 @@
   );
 </script>
 
-<StatusList {queryResult} />
+{#if $masto}
+  <StatusList {queryResult} />
+{/if}

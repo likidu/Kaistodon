@@ -34,10 +34,9 @@ function createStore() {
   };
 }
 
-// const addOrReplace = (arr, newObj) => [...arr.filter((o) => o.uid !== newObj.uid), {...newObj}];
 const storageKey = 'auth';
 
-// Initialize
+// Initialize tokens store
 const { instance } = get(settings);
 const initToken: Token = {
   instance,

@@ -7,8 +7,8 @@
   import View from '@/ui/components/view/View.svelte';
   import ViewContent from '@/ui/components/view/ViewContent.svelte';
 
-  import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URL_LOCAL } from '@/lib/configs';
-  import type { TokenRequest } from '@/lib/models';
+  import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URL } from '@/lib/configs';
+  import type { TokenRequest, TokenResponse } from '@/lib/models';
   import { settings, tokens } from '@/lib/stores';
 
   export let params: { code: string };
@@ -23,38 +23,30 @@
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
       scope: 'read write follow push',
-      redirect_uri: REDIRECT_URL_LOCAL,
+      redirect_uri: REDIRECT_URL,
       code,
       grant_type: 'authorization_code',
     };
 
-    // const response = await fetch(`https://${instance}/oath/token`, {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json; charset=utf-8',
-    //   },
-    //   body: JSON.stringify(request),
-    // });
-    const response = await axios.post(`https://${instance}/oath/token`, request, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json; charset=utf-8',
-      },
-    });
-    console.log(response);
-    const { token } = await response.json();
-    // Update instance's token in Local Storage
-    console.log('Token: ', token);
-    tokens.update({ instance, token });
+    try {
+      const { data } = await axios.post<TokenResponse>(`https://${instance}/oauth/token`, request);
+      const { access_token: token } = data;
+      // Update instance's token in Local Storage
+      console.log('[OAuth]: Access token: ', token);
+      tokens.update({ instance, token });
 
-    replace('/trend');
+      replace('/trend');
+
+      return;
+    } catch (error) {
+      replace('/login');
+    }
   });
 </script>
 
 <View>
   <ViewContent>
-    <Typography align="center">Sign in to cmx.im...</Typography>
+    <Typography align="center">Signing in {instance}...</Typography>
     <p>{code}</p>
   </ViewContent>
 </View>

@@ -36,13 +36,18 @@
         onSelect: async () => {
           // Update current instance in Local Storage
           settings.update({ instance });
-          // TODO: Update KaiOS lib to support this type
-          // @ts-ignore: next line
-          const view = new WebActivity('view', {
-            type: 'url',
-            url: `https://${instance}/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL}&scope=read write follow push`,
-          });
-          view.start();
+          const url = `https://${instance}/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL}&scope=read write follow push`;
+          if (process.env.NODE_ENV === 'development') {
+            window.open(url, '_blank');
+          } else {
+            // TODO: Update KaiOS lib to support this type
+            // @ts-ignore: next line
+            const view = new WebActivity('view', {
+              type: 'url',
+              url,
+            });
+            view.start();
+          }
         },
       }}
     />

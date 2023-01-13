@@ -43,6 +43,10 @@
     '*': NotFound,
   };
 
+  let tk: string;
+  // The name has to be consistent with one set in the sw.js
+  const channel = new BroadcastChannel('sw-messages');
+
   // TODO: Fix this in a better way
   document.addEventListener('keydown', (ev) => {
     if (ev.key === 'Backspace' && $location !== '/' && (ev.target as any).contentEditable !== 'true') {
@@ -69,9 +73,6 @@
   onMount(() => {
     const { token } = $tokens.find((t) => t.instance === $settings.instance);
 
-    let tk: string;
-    // The name has to be consistent with one set in the sw.js
-    const channel = new BroadcastChannel('sw-messages');
     channel.onmessage = (ev) => {
       tk = ev.data;
       console.log('[App]: channel receive: ', ev.data);

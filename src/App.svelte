@@ -2,7 +2,7 @@
   import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
   import { OnyxKeys } from 'onyx-keys';
   import { register } from 'register-service-worker';
-  import Router, { location, pop, replace } from 'svelte-spa-router';
+  import Router, { location, pop, querystring, replace } from 'svelte-spa-router';
 
   import OnyxApp from '@/ui/components/app/OnyxApp.svelte';
   import { Onyx } from '@/ui/services';
@@ -75,16 +75,17 @@
     });
 
     channel.onmessage = (ev) => {
-      if (ev.data) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        if (code) {
-          console.log('[App]: OAuth flow...');
-          replace(`/oauth/${code}`);
-          return;
-        }
-      }
+      console.log('[App]: Channel message: ', ev.data);
     };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      console.log('[App]: OAuth flow...');
+      $querystring = '';
+      replace(`/oauth/${code}`);
+      return;
+    }
 
     const { token } = $tokens.find((t) => t.instance === $settings.instance);
     if (token === '') {

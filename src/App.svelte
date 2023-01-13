@@ -69,13 +69,14 @@
   onMount(() => {
     const { token } = $tokens.find((t) => t.instance === $settings.instance);
 
-    let accessToken: string;
+    let tk: string;
     // The name has to be consistent with one set in the sw.js
     const channel = new BroadcastChannel('sw-messages');
     channel.onmessage = (ev) => {
-      accessToken = ev.data;
+      tk = ev.data;
       console.log('[App]: channel receive: ', ev.data);
     };
+    console.log('[App]: tk is: ', tk);
 
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');

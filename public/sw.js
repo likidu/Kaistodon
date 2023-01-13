@@ -3,7 +3,6 @@ const channel = new BroadcastChannel('sw-messages');
 
 self.onsystemmessage = (evt) => {
   console.log('onsystemmessage');
-  channel.postMessage('Hello');
 
   const serviceHandler = () => {
     if (evt.name === 'activity') {
@@ -16,7 +15,7 @@ self.onsystemmessage = (evt) => {
       // Handle OAuth callback
       if (activityName === 'KaistodonCallback') {
         const { code } = activityData;
-        channel.postMessage({ accessToken: code });
+        channel.postMessage(code);
 
         const url = `/index.html?code=${code}`;
         clients.openWindow(url);

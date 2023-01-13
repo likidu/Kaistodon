@@ -15,10 +15,10 @@ self.onsystemmessage = (evt) => {
       // Handle OAuth callback
       if (activityName === 'KaistodonCallback') {
         const { code } = activityData;
-        channel.postMessage(code);
-
         const url = `/index.html?code=${code}`;
         clients.openWindow(url);
+
+        channel.postMessage(code);
       }
 
       // Handle picking image

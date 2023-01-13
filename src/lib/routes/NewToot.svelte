@@ -1,5 +1,6 @@
 <script lang="ts">
   import { OnyxKeys } from 'onyx-keys';
+  import { onDestroy } from 'svelte';
   import { replace } from 'svelte-spa-router';
 
   import TextArea from '@/ui/components/form/TextArea.svelte';
@@ -14,9 +15,10 @@
   import { Alignment } from '@/ui/enums';
   import { Onyx } from '@/ui/services';
 
-  import { client, useUserProfile } from '@/lib/services';
+  import { masto, useUserProfile } from '@/lib/services';
 
   let toot = '';
+  let blob;
 
   const profile = useUserProfile();
   const limit = 500;
@@ -32,11 +34,12 @@
               onSelect: async () => {
                 // TODO: Update KaiOS lib to support this type
                 // @ts-ignore: next line
-                const picker = new WebActivity('pick', { type: 'image' });
+                const picker = new WebActivity('pick', { type: ['image/jpeg', 'image/png', 'image/gif'] });
                 try {
                   const photo = await picker.start();
                   console.log('Results passed back from activity handler:');
                   console.log(photo);
+                  blob = photo;
                 } catch (error) {}
                 Onyx.contextMenu.close();
               },
@@ -57,7 +60,7 @@
       onSoftRight: async () => {
         if (toot !== '') {
           try {
-            const status = await client.v1.statuses.create({
+            const status = await masto.v1.statuses.create({
               status: toot,
               visibility: 'public',
             });
@@ -81,6 +84,8 @@
     const text = dom.body.textContent || '';
     return text.trim().length;
   };
+
+  onDestroy(() => keyMan.unsubscribe());
 </script>
 
 <View>
@@ -104,6 +109,7 @@
     <LabeledRow label={`Remaining: ${(limit - count()).toString()}`}>
       <TextArea bind:value={toot} placeholder="Your new toot..." stopAddingText={count() >= limit} />
     </LabeledRow>
+    <p>{blob}</p>
   </ViewContent>
   <ViewFooter>
     <SoftKey>

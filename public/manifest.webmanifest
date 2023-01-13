@@ -5,7 +5,7 @@
   "short_name": "kaistodon",
   "categories": ["social"],
   "description": "A Mastodon client for KaiOS",
-  "theme_color": "#4da8d7",
+  "theme_color": "#5757ff",
   "background_color": "#ffffff",
   "icons": [
     {
@@ -50,15 +50,13 @@
       "script_url": "sw.js"
     },
     "activities": {
-      "share": {
+      "pick": {
         "filters": {
           "type": ["image/jpeg", "image/png", "image/gif"]
         },
-        "href": "index.html",
-        "disposition": "window",
         "returnValue": true
       },
-      "kaiteCallback": {
+      "KaistodonCallback": {
         "filters": {
           "code": {
             "required": true
@@ -67,7 +65,7 @@
         "returnValue": true
       }
     },
-    "focus_color": "#4da8d7",
+    "focus_color": "#5757ff",
     "developer": {
       "name": "Liki Du",
       "url": "https://likidu.com"

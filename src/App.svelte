@@ -43,14 +43,6 @@
     '*': NotFound,
   };
 
-  let accessToken: string;
-  // The name has to be consistent with one set in the sw.js
-  const channel = new BroadcastChannel('sw-messages');
-  channel.addEventListener('message', (ev) => {
-    accessToken = ev.data;
-    console.log('[App]: channel receive: ', ev.data);
-  });
-
   // TODO: Fix this in a better way
   document.addEventListener('keydown', (ev) => {
     if (ev.key === 'Backspace' && $location !== '/' && (ev.target as any).contentEditable !== 'true') {
@@ -72,17 +64,18 @@
     { priority: 1 },
   );
 
-  OnyxKeys.setOptions({
-    repeatDelay: 2000,
-    repeatRate: 2000,
-  });
-
   $: Onyx.settings.update($settings);
 
-  $: onMount(() => {
+  onMount(() => {
     const { token } = $tokens.find((t) => t.instance === $settings.instance);
 
-    console.log('[App]: accessToken: ', accessToken);
+    let accessToken: string;
+    // The name has to be consistent with one set in the sw.js
+    const channel = new BroadcastChannel('sw-messages');
+    channel.onmessage = (ev) => {
+      accessToken = ev.data;
+      console.log('[App]: channel receive: ', ev.data);
+    };
 
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
@@ -104,7 +97,6 @@
 </script>
 
 <OnyxApp>
-  {accessToken}
   <AppMenu slot="app-menu" />
   <QueryClientProvider client={queryClient}>
     <Router {routes} />

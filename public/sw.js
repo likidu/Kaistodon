@@ -3,6 +3,7 @@ const channel = new BroadcastChannel('sw-messages');
 
 self.onsystemmessage = (evt) => {
   console.log('onsystemmessage');
+  channel.postMessage('Hello');
 
   const serviceHandler = () => {
     if (evt.name === 'activity') {

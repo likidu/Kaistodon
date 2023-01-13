@@ -33,7 +33,7 @@
   // The name has to be consistent with one set in the sw.js
   const channel = new BroadcastChannel('sw-messages');
   channel.addEventListener('message', (ev) => {
-    accessToken = ev.data.code;
+    accessToken = ev.data;
   });
 
   // TODO: Fix this in a better way
@@ -86,13 +86,13 @@
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     if (code || token === '') {
-      console.log('OAuth flow...');
+      console.log('[App]: OAuth flow...');
       replace(`/oauth/${code}`);
       return;
     }
 
     if (token === '') {
-      console.log('Not signed in...');
+      console.log('[App]: Not signed in...');
       replace('/login');
       return;
     }

@@ -44,5 +44,3 @@ const initToken: Token = {
 };
 
 export const tokens = createStore();
-
-export const code = writable('');

@@ -2,7 +2,6 @@
   import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
   import { OnyxKeys } from 'onyx-keys';
   import { register } from 'register-service-worker';
-  import { onMount } from 'svelte';
   import Router, { location, pop, replace } from 'svelte-spa-router';
 
   import OnyxApp from '@/ui/components/app/OnyxApp.svelte';
@@ -10,7 +9,8 @@
 
   import AppMenu from '@/lib/components/AppMenu.svelte';
   import { Home, Login, NewToot, NotFound, OAuth, Settings, Timeline, Trend } from '@/lib/routes';
-  import { code as thecode, settings, tokens } from '@/lib/stores';
+  import { settings, tokens } from '@/lib/stores';
+  import { onMount } from 'svelte';
 
   // Register service worker
   register('/sw.js', {
@@ -25,6 +25,9 @@
       console.error('Error during service worker registration:', error);
     },
   });
+
+  // The name has to be consistent with one set in the sw.js
+  const channel = new BroadcastChannel('sw-messages');
 
   const queryClient = new QueryClient();
 
@@ -43,15 +46,6 @@
     '*': NotFound,
   };
 
-  // The name has to be consistent with one set in the sw.js
-  const channel = new BroadcastChannel('sw-messages');
-
-  // TODO: Fix this in a better way
-  document.addEventListener('keydown', (ev) => {
-    if (ev.key === 'Backspace' && $location !== '/' && (ev.target as any).contentEditable !== 'true') {
-      ev.preventDefault();
-    }
-  });
   const keyMan = OnyxKeys.subscribe(
     {
       onBackspace: async () => {
@@ -69,23 +63,30 @@
 
   $: Onyx.settings.update($settings);
 
+  let hello: string;
+
   onMount(() => {
-    const { token } = $tokens.find((t) => t.instance === $settings.instance);
+    // Make Backspace work properly
+    // TODO: Fix this in a better way
+    document.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Backspace' && $location !== '/' && (ev.target as any).contentEditable !== 'true') {
+        ev.preventDefault();
+      }
+    });
 
     channel.onmessage = (ev) => {
       console.log('[App]: channel receive: ', ev.data);
-      if (ev.data) $thecode = ev.data;
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      if (code) {
+        console.log('[App]: OAuth flow...');
+        replace(`/oauth/${code}`);
+        return;
+      }
     };
-    console.log('[App]: the code is: ', $thecode);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    if (code || token === '') {
-      console.log('[App]: OAuth flow...');
-      replace(`/oauth/${code}`);
-      return;
-    }
-
+    const { token } = $tokens.find((t) => t.instance === $settings.instance);
     if (token === '') {
       console.log('[App]: Not signed in...');
       replace('/login');

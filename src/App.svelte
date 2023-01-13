@@ -29,6 +29,13 @@
     '*': NotFound,
   };
 
+  let accessToken: string;
+  // The name has to be consistent with one set in the sw.js
+  const channel = new BroadcastChannel('sw-messages');
+  channel.addEventListener('message', (ev) => {
+    accessToken = ev.data.code;
+  });
+
   // TODO: Fix this in a better way
   document.addEventListener('keydown', (ev) => {
     if (ev.key === 'Backspace' && $location !== '/' && (ev.target as any).contentEditable !== 'true') {
@@ -72,15 +79,18 @@
       },
     });
 
+    const { token } = $tokens.find((t) => t.instance === $settings.instance);
+
+    console.log('[App]: accessToken: ', accessToken);
+
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    if (code) {
+    if (code || token === '') {
       console.log('OAuth flow...');
       replace(`/oauth/${code}`);
       return;
     }
 
-    const { token } = $tokens.find((t) => t.instance === $settings.instance);
     if (token === '') {
       console.log('Not signed in...');
       replace('/login');
@@ -88,7 +98,7 @@
     }
 
     // Trend is the default route
-    // if ($location === '/') replace('/trend');
+    if ($location === '/') replace('/trend');
   });
 </script>
 

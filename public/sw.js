@@ -1,4 +1,6 @@
-//The service worker
+// The service worker to handle OAuth token
+const channel = new BroadcastChannel('sw-messages');
+
 self.onsystemmessage = (evt) => {
   console.log('onsystemmessage');
 
@@ -13,6 +15,8 @@ self.onsystemmessage = (evt) => {
       // Handle OAuth callback
       if (activityName === 'KaistodonCallback') {
         const { code } = activityData;
+        channel.postMessage({ code });
+
         const url = `/index.html?code=${code}`;
         clients.openWindow(url);
       }

@@ -10,7 +10,7 @@
 
   import AppMenu from '@/lib/components/AppMenu.svelte';
   import { Home, Login, NewToot, NotFound, OAuth, Settings, Timeline, Trend } from '@/lib/routes';
-  import { settings, tokens } from '@/lib/stores';
+  import { code as thecode, settings, tokens } from '@/lib/stores';
 
   // Register service worker
   register('/sw.js', {
@@ -43,7 +43,6 @@
     '*': NotFound,
   };
 
-  let tk: string;
   // The name has to be consistent with one set in the sw.js
   const channel = new BroadcastChannel('sw-messages');
 
@@ -74,10 +73,10 @@
     const { token } = $tokens.find((t) => t.instance === $settings.instance);
 
     channel.onmessage = (ev) => {
-      tk = ev.data;
       console.log('[App]: channel receive: ', ev.data);
+      if (ev.data) $thecode = ev.data;
     };
-    console.log('[App]: tk is: ', tk);
+    console.log('[App]: the code is: ', $thecode);
 
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');

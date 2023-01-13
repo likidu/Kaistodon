@@ -65,7 +65,7 @@
 
   let hello: string;
 
-  onMount(() => {
+  $: onMount(() => {
     // Make Backspace work properly
     // TODO: Fix this in a better way
     document.addEventListener('keydown', (ev) => {

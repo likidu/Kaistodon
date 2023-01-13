@@ -12,6 +12,20 @@
   import { Home, Login, NewToot, NotFound, OAuth, Settings, Timeline, Trend } from '@/lib/routes';
   import { settings, tokens } from '@/lib/stores';
 
+  // Register service worker
+  register('/sw.js', {
+    registrationOptions: { scope: './' },
+    ready(registration) {
+      console.log('Service worker is active.');
+    },
+    registered(registration) {
+      console.log('Service worker is registered!');
+    },
+    error(error) {
+      console.error('Error during service worker registration:', error);
+    },
+  });
+
   const queryClient = new QueryClient();
 
   const routes = {
@@ -34,6 +48,7 @@
   const channel = new BroadcastChannel('sw-messages');
   channel.addEventListener('message', (ev) => {
     accessToken = ev.data;
+    console.log('[App]: channel receive: ', ev.data);
   });
 
   // TODO: Fix this in a better way
@@ -65,20 +80,6 @@
   $: Onyx.settings.update($settings);
 
   $: onMount(() => {
-    // Register service worker
-    register('/sw.js', {
-      registrationOptions: { scope: './' },
-      ready(registration) {
-        console.log('Service worker is active.');
-      },
-      registered(registration) {
-        console.log('Service worker is registered!');
-      },
-      error(error) {
-        console.error('Error during service worker registration:', error);
-      },
-    });
-
     const { token } = $tokens.find((t) => t.instance === $settings.instance);
 
     console.log('[App]: accessToken: ', accessToken);
@@ -103,6 +104,7 @@
 </script>
 
 <OnyxApp>
+  {accessToken}
   <AppMenu slot="app-menu" />
   <QueryClientProvider client={queryClient}>
     <Router {routes} />

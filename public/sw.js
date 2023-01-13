@@ -22,12 +22,14 @@ self.onsystemmessage = (evt) => {
       }
 
       // Handle picking image
-      // const image = getImageToReturn();
-      // if (!image) {
-      //   handler.postError('No Image!');
-      //   return;
-      // }
-      // handler.postResult({ type: 'image', url: image });
+      if (activityName === 'pick') {
+        const image = getImageToReturn();
+        if (!image) {
+          handler.postError('No Image!');
+          return;
+        }
+        handler.postResult({ type: 'image', url: image });
+      }
     }
   };
   evt.waitUntil(serviceHandler());

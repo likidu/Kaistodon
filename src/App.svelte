@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
+  import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
   import { OnyxKeys } from 'onyx-keys';
   import { register } from 'register-service-worker';
   import Router, { location, pop, replace } from 'svelte-spa-router';
@@ -78,18 +78,20 @@
       console.log('[App]: Channel message: ', ev.data);
     };
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    if (code) {
-      console.log('[App]: OAuth flow...');
-      replace(`/oauth/${code}`);
-      return;
-    }
-
+    // Find the token for the selected instance
     const { token } = $tokens.find((t) => t.instance === $settings.instance);
     if (token === '') {
       console.log('[App]: Not signed in...');
       replace('/login');
+      // Wrapped here to skip the OAuth page if there is valid token in Local Storage
+      // Get the code from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      if (code) {
+        console.log('[App]: OAuth flow...');
+        replace(`/oauth/${code}`);
+        return;
+      }
       return;
     }
 

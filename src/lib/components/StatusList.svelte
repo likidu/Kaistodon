@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { QueryKey, UseInfiniteQueryStoreResult } from '@sveltestack/svelte-query';
+  import type { CreateInfiniteQueryResult } from '@tanstack/svelte-query';
   import type { mastodon } from 'masto';
   import Time from 'svelte-time';
 
@@ -13,7 +13,7 @@
 
   import PhotoSlider from '@/lib/components/PhotoSlider.svelte';
 
-  export let queryResult: UseInfiniteQueryStoreResult<mastodon.v1.Status[], Error, mastodon.v1.Status[], QueryKey>;
+  export let query: CreateInfiniteQueryResult<mastodon.v1.Status[]>;
 
   function parseHtml(html: string): { seralized: string; links: string[] } {
     let links = [];
@@ -56,12 +56,14 @@
   }
 </script>
 
-{#if $queryResult.status === 'loading'}
+{#if $query.isLoading}
   <Typography align="center">Loading...</Typography>
-{:else if $queryResult.status === 'error'}
+{/if}
+{#if $query.error}
   <Typography align="center">Error!</Typography>
-{:else}
-  {#each $queryResult.data.pages as page, i}
+{/if}
+{#if $query.isSuccess}
+  {#each $query.data.pages as page, i}
     {#each page as status, j}
       {#if status.visibility === 'public'}
         {@const { seralized, links } = parseHtml(status.content)}
@@ -129,7 +131,7 @@
     title="Load more"
     navi={{
       itemId: 'STATUS_LOAD_MORE',
-      onSelect: () => $queryResult.fetchNextPage(),
+      onSelect: () => $query.fetchNextPage(),
     }}
   />
 {/if}

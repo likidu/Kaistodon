@@ -13,9 +13,7 @@ import { settings } from '@/lib/stores';
  * @returns Store<T>
  */
 function createStore() {
-  const storedTokens = Storage.get<Token[]>(storageKey);
-
-  const initStore = storedTokens ? addOrReplace(storedTokens, 'instance', initToken) : [initToken];
+  const initStore = storedTokens ? storedTokens : [initToken];
   const { subscribe, update, set } = writable(initStore);
 
   subscribe((val) => {
@@ -42,5 +40,7 @@ const initToken: Token = {
   instance,
   token: '',
 };
+
+const storedTokens = Storage.get<Token[]>(storageKey);
 
 export const tokens = createStore();

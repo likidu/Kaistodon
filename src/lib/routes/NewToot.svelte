@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { createQuery } from '@tanstack/svelte-query';
+  import type { mastodon } from 'masto';
   import { OnyxKeys } from 'onyx-keys';
   import { onDestroy } from 'svelte';
   import { replace } from 'svelte-spa-router';
@@ -15,13 +17,17 @@
   import { Alignment } from '@/ui/enums';
   import { Onyx } from '@/ui/services';
 
-  import { masto, useUserProfile } from '@/lib/services';
+  import { masto } from '@/lib/services';
 
   let toot = '';
   let blob;
-
-  const profile = useUserProfile();
+  // Characters limit
   const limit = 500;
+
+  $: profile = createQuery<mastodon.v1.Account>({
+    queryKey: ['user-profile'],
+    queryFn: async () => !!$masto && (await $masto.v1.accounts.verifyCredentials()),
+  });
 
   const keyMan = OnyxKeys.subscribe(
     {
@@ -38,7 +44,7 @@
                 try {
                   const photo = await picker.start();
                   console.log('Results passed back from activity handler:');
-                  console.log(photo);
+                  console.log(JSON.stringify(photo));
                   blob = photo;
                 } catch (error) {}
                 Onyx.contextMenu.close();
@@ -60,7 +66,7 @@
       onSoftRight: async () => {
         if (toot !== '') {
           try {
-            const status = await masto.v1.statuses.create({
+            const status = await $masto.v1.statuses.create({
               status: toot,
               visibility: 'public',
             });
@@ -91,11 +97,13 @@
 <View>
   <ViewHeader title="New Toot" />
   <ViewContent>
-    {#if $profile.status === 'loading'}
+    {#if $profile.isLoading}
       <Typography align="center">Loading Profile...</Typography>
-    {:else if $profile.status === 'error'}
+    {/if}
+    {#if $profile.error}
       <Typography align="center">Error!</Typography>
-    {:else}
+    {/if}
+    {#if $profile.isSuccess}
       {@const profile = $profile.data}
       <ListItem
         imageUrl={profile.avatarStatic}

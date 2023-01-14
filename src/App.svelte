@@ -8,7 +8,7 @@
   import { Onyx } from '@/ui/services';
 
   import AppMenu from '@/lib/components/AppMenu.svelte';
-  import { Home, Login, NewToot, NotFound, OAuth, Settings, Timeline, Trend } from '@/lib/routes';
+  import { Home, Login, NewToot, NotFound, OAuth, Settings, Timeline, Toot, Trend } from '@/lib/routes';
   import { settings, tokens } from '@/lib/stores';
   import { onMount } from 'svelte';
 
@@ -42,6 +42,7 @@
     '/timeline': Timeline,
     '/timeline/public': Timeline,
     '/timeline/federated': Timeline,
+    '/toot/:id': Toot,
     '/settings': Settings,
     '*': NotFound,
   };

@@ -115,7 +115,7 @@
       />
     {/if}
     <LabeledRow label={`Remaining: ${(limit - count()).toString()}`}>
-      <TextArea bind:value={toot} placeholder="Your new toot..." stopAddingText={count() >= limit} />
+      <TextArea bind:value={toot} placeholder="Toot to the world..." stopAddingText={count() >= limit} />
     </LabeledRow>
     <p>{blob}</p>
   </ViewContent>

@@ -1,17 +1,11 @@
 <script lang="ts">
   import type { CreateInfiniteQueryResult } from '@tanstack/svelte-query';
   import type { mastodon } from 'masto';
-  import Time from 'svelte-time';
 
   import Button from '@/ui/components/buttons/Button.svelte';
-  import Icon from '@/ui/components/icon/Icon.svelte';
-  import ListItem from '@/ui/components/list/ListItem.svelte';
   import Typography from '@/ui/components/Typography.svelte';
-  import { Alignment, Color, IconSize } from '@/ui/enums';
-  import { IconComment, IconReply, IconStar } from '@/ui/icons';
-  import { delay } from '@/ui/utils/delay';
 
-  import PhotoSlider from '@/lib/components/PhotoSlider.svelte';
+  import StatusItem from './StatusItem.svelte';
 
   export let query: CreateInfiniteQueryResult<mastodon.v1.Status[]>;
 
@@ -66,64 +60,7 @@
   {#each $query.data.pages as page, i}
     {#each page as status, j}
       {#if status.visibility === 'public'}
-        {@const { seralized, links } = parseHtml(status.content)}
-        <ListItem
-          imageUrl={status.account.avatarStatic}
-          align={Alignment.Top}
-          titleText={status.account.displayName}
-          navi={{ itemId: `STATUS-${i + 1}-${j + 1}`, onSelect: () => {} }}
-          contextMenu={{
-            title: `${status.account.displayName}'s Status`,
-            items: [
-              {
-                label: links[0],
-                workingLabel: 'Opening URL...',
-                onSelect: async () => {
-                  if (links[0]) {
-                    // TODO: Update KaiOS lib to support this type
-                    // @ts-ignore: next line
-                    const view = new WebActivity('view', {
-                      type: 'url',
-                      url: links[0],
-                    });
-                    view.start();
-                    await delay(1000);
-                  }
-                },
-              },
-              {
-                label: `🙆‍♂️ ${status.account.acct}`,
-                onSelect: () => console.log('context menu item 3'),
-              },
-            ],
-          }}
-        >
-          <svelte:fragment slot="subtitle">
-            {status.account.acct} &bull <Time relative timestamp={status.createdAt} />
-          </svelte:fragment>
-          <div class="status-content" slot="content">
-            {@html seralized}
-          </div>
-          <div slot="bottom">
-            {#if status.mediaAttachments.length > 0}
-              <PhotoSlider photos={status.mediaAttachments} />
-            {/if}
-            <section class="stats">
-              <div class="item">
-                <Icon size={IconSize.Smallest} color={Color.Secondary}><IconReply /></Icon>
-                <span>{status.reblogsCount}</span>
-              </div>
-              <div class="item">
-                <Icon size={IconSize.Smallest} color={Color.Secondary}><IconStar /></Icon>
-                <span>{status.favouritesCount}</span>
-              </div>
-              <div class="item">
-                <Icon size={IconSize.Smallest} color={Color.Secondary}><IconComment /></Icon>
-                <span>{status.repliesCount}</span>
-              </div>
-            </section>
-          </div>
-        </ListItem>
+        <StatusItem {status} />
       {/if}
     {/each}
   {/each}

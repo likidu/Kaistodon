@@ -1,21 +1,22 @@
 <script lang="ts">
   import { IconDotsVertical } from '@/ui/icons';
   import type { SvelteComponent } from 'svelte';
-  import { Alignment, Color, IconSize } from '../../enums';
+  import { Alignment, Color, IconSize, Layout } from '../../enums';
   import type { ContextMenu, Navigation } from '../../models';
   import { settings } from '../../stores';
   import Icon from '../icon/Icon.svelte';
   import NavItem from '../nav/NavItem.svelte';
 
+  export let layout: Layout = Layout.Row;
   export let imageUrl: string = null;
   export let imageStyle: 'square' | 'circle' = 'square';
   export let imageSize: IconSize = IconSize.Medium;
   export let icon: typeof SvelteComponent = null;
   export let iconColor: Color = Color.Primary;
-  export let align: Alignment = Alignment.Middle;
+  export let align: Alignment = Alignment.Top;
   export let titleText: string = null;
-  export let contentText: string = null;
   export let subtitleText: string = null;
+  export let contentText: string = null;
   export let navi: Navigation;
   export let contextMenu: ContextMenu = null;
   export let nofocus = false;
@@ -41,18 +42,21 @@
           style={`height: ${imageSize}px; width: ${imageSize}px;`}
         />
       {/if}
-      <div class="grow">
-        {#if titleText}
-          <div class="title">{titleText}</div>
-        {/if}
-        {#if subtitleText}
-          <div class="subtitle">{subtitleText}</div>
-        {:else if $$slots['subtitle']}
-          <div class="subtitle">
-            <slot name="subtitle" />
-          </div>
-        {/if}
-      </div>
+      <!-- Title in row layout -->
+      {#if layout === Layout.Row}
+        <div class="grow">
+          {#if titleText}
+            <div class="title">{titleText}</div>
+          {/if}
+          {#if subtitleText}
+            <div class="subtitle">{subtitleText}</div>
+          {:else if $$slots['subtitle']}
+            <div class="subtitle">
+              <slot name="subtitle" />
+            </div>
+          {/if}
+        </div>
+      {/if}
       {#if $settings.shortcutKeyLocation === 'right' && navi.shortcutKey}
         <div class="shortcut">{navi.shortcutKey}</div>
       {/if}
@@ -63,6 +67,19 @@
       {/if}
     </div>
     <div class="container">
+      <!-- Title in col layout -->
+      {#if layout === Layout.Col}
+        {#if titleText}
+          <div class="title">{titleText}</div>
+        {/if}
+        {#if subtitleText}
+          <div class="subtitle">{subtitleText}</div>
+        {:else if $$slots['subtitle']}
+          <div class="subtitle">
+            <slot name="subtitle" />
+          </div>
+        {/if}
+      {/if}
       {#if contentText}
         <div class="content">{contentText}</div>
       {:else}

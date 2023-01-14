@@ -5,6 +5,7 @@ export * from './contextKey';
 export * from './dataStatus';
 export * from './density';
 export * from './iconSize';
+export * from './layout';
 export * from './priority';
 export * from './renderState';
 export * from './textSize';

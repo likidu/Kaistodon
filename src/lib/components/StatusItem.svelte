@@ -12,6 +12,7 @@
   import PhotoSlider from '@/lib/components/PhotoSlider.svelte';
 
   export let status: mastodon.v1.Status;
+  export let sub: boolean = false;
   export let layout: Layout = Layout.Row;
 
   const { seralized, links } = parseHtml(status.content);
@@ -60,8 +61,14 @@
 <ListItem
   {layout}
   imageUrl={status.account.avatarStatic}
+  imageSize={sub && IconSize.Small}
   titleText={status.account.displayName}
-  navi={{ itemId: `STATUS-${status.id}`, onSelect: () => push(`/toot/${status.id}`) }}
+  navi={{
+    itemId: `STATUS-${status.id}`,
+    onSelect: () => {
+      if (status.repliesCount > 0) push(`/toot/${status.id}`);
+    },
+  }}
   contextMenu={{
     title: `${status.account.displayName}'s Status`,
     items: [
@@ -91,7 +98,7 @@
   <svelte:fragment slot="subtitle">
     {status.account.acct} &bull <Time relative timestamp={status.createdAt} />
   </svelte:fragment>
-  <div class="status-content" slot="content">
+  <div class="status-content" style={sub && 'font-size: 1.2rem'} slot="content">
     {@html seralized}
   </div>
   <div slot="bottom">
@@ -116,6 +123,7 @@
 </ListItem>
 
 <style global lang="postcss">
+  /* Margin top of innerHTML paragraph */
   .status-content > p:not(:first-child) {
     @apply mt-2;
   }

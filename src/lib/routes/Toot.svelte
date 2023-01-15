@@ -46,7 +46,7 @@
       {#if $context.data.descendants.length > 0}
         <ListHeader title="Replies" />
         {#each $context.data.descendants as reply}
-          <StatusItem status={reply} layout={Layout.Col} />
+          <StatusItem status={reply} sub={true} layout={Layout.Col} />
         {/each}
       {/if}
     {/if}

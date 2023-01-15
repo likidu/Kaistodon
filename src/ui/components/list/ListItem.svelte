@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { IconDotsVertical } from '@/ui/icons';
   import type { SvelteComponent } from 'svelte';
+
   import { Alignment, Color, IconSize, Layout } from '../../enums';
+  import { IconDotsVertical } from '../../icons';
   import type { ContextMenu, Navigation } from '../../models';
   import { settings } from '../../stores';
   import Icon from '../icon/Icon.svelte';
   import NavItem from '../nav/NavItem.svelte';
+  import ListItemWrapper from './ListItemWrapper.svelte';
 
   export let layout: Layout = Layout.Row;
   export let imageUrl: string = null;
@@ -20,31 +22,34 @@
   export let navi: Navigation;
   export let contextMenu: ContextMenu = null;
   export let nofocus = false;
+
+  const flexDirection = layout === Layout.Col ? `flex-direction: row;` : '';
 </script>
 
 <NavItem {navi} {contextMenu} {nofocus}>
-  <div class="root" style={`align-items: ${align}`}>
-    <div class="flex flex-row justify-between w-full">
-      {#if $settings.shortcutKeyLocation === 'left' && navi.shortcutKey}
-        <div class="shortcut">{navi.shortcutKey}</div>
-      {/if}
-      {#if icon}
-        <div class="icon">
-          <Icon size={imageSize} color={iconColor}><svelte:component this={icon} /></Icon>
-        </div>
-      {/if}
-      {#if imageUrl}
-        <img
-          class="image"
-          class:circle={imageStyle === 'circle'}
-          src={imageUrl}
-          alt=""
-          style={`height: ${imageSize}px; width: ${imageSize}px;`}
-        />
-      {/if}
-      <!-- Title in row layout -->
-      {#if layout === Layout.Row}
-        <div class="grow">
+  <div class="root">
+    <div class="container" style={`align-items: ${align}; ${flexDirection}`}>
+      <ListItemWrapper {layout}>
+        <svelte:fragment slot="header">
+          {#if $settings.shortcutKeyLocation === 'left' && navi.shortcutKey}
+            <div class="shortcut">{navi.shortcutKey}</div>
+          {/if}
+          {#if icon}
+            <div class="icon">
+              <Icon size={imageSize} color={iconColor}><svelte:component this={icon} /></Icon>
+            </div>
+          {/if}
+          {#if imageUrl}
+            <img
+              class="image"
+              class:circle={imageStyle === 'circle'}
+              src={imageUrl}
+              alt=""
+              style={`height: ${imageSize}px; width: ${imageSize}px;`}
+            />
+          {/if}
+        </svelte:fragment>
+        <svelte:fragment slot="title">
           {#if titleText}
             <div class="title">{titleText}</div>
           {/if}
@@ -55,46 +60,41 @@
               <slot name="subtitle" />
             </div>
           {/if}
-        </div>
-      {/if}
-      {#if $settings.shortcutKeyLocation === 'right' && navi.shortcutKey}
-        <div class="shortcut">{navi.shortcutKey}</div>
-      {/if}
-      {#if $settings.contextMenuIndicators && contextMenu}
-        <div class="menu-icon">
-          <Icon size={IconSize.Small} color={Color.Secondary}><IconDotsVertical /></Icon>
-        </div>
-      {/if}
+        </svelte:fragment>
+        <svelte:fragment slot="settings">
+          {#if $settings.shortcutKeyLocation === 'right' && navi.shortcutKey}
+            <div class="shortcut">{navi.shortcutKey}</div>
+          {/if}
+          {#if $settings.contextMenuIndicators && contextMenu}
+            <div class="menu-icon">
+              <Icon size={IconSize.Small} color={Color.Secondary}><IconDotsVertical /></Icon>
+            </div>
+          {/if}
+        </svelte:fragment>
+        <svelte:fragment slot="content">
+          {#if contentText}
+            <div class="content">{contentText}</div>
+          {:else}
+            <slot name="content" />
+          {/if}
+        </svelte:fragment>
+      </ListItemWrapper>
     </div>
     <div class="container">
-      <!-- Title in col layout -->
-      {#if layout === Layout.Col}
-        {#if titleText}
-          <div class="title">{titleText}</div>
-        {/if}
-        {#if subtitleText}
-          <div class="subtitle">{subtitleText}</div>
-        {:else if $$slots['subtitle']}
-          <div class="subtitle">
-            <slot name="subtitle" />
-          </div>
-        {/if}
-      {/if}
-      {#if contentText}
-        <div class="content">{contentText}</div>
-      {:else}
-        <slot name="content" />
-      {/if}
+      <!-- <div class="container"> -->
       <slot name="bottom" />
+      <!-- </div> -->
     </div>
   </div>
 </NavItem>
 
 <style lang="postcss">
   .root {
-    @apply flex flex-col items-center;
     padding: 7px;
     border-bottom: 1px solid var(--divider-color);
+  }
+  .container {
+    @apply flex flex-col items-center;
   }
 
   .icon {
@@ -111,7 +111,7 @@
     border-radius: 50%;
   }
 
-  .container {
+  .content {
     flex: 1;
     min-width: 0;
   }

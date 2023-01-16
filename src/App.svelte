@@ -8,7 +8,7 @@
   import { Onyx } from '@/ui/services';
 
   import AppMenu from '@/lib/components/AppMenu.svelte';
-  import { Home, Login, NewToot, NotFound, OAuth, Settings, Timeline, Toot, Trend } from '@/lib/routes';
+  import { Explore, Home, Login, NewToot, NotFound, OAuth, Search, Settings, Timeline, Toot } from '@/lib/routes';
   import { settings, tokens } from '@/lib/stores';
   import { onMount } from 'svelte';
 
@@ -33,16 +33,16 @@
 
   const routes = {
     '/': Home,
-    '/trend': Trend,
-    '/trend/statuses': Trend,
-    '/trend/tags': Trend,
+    '/timeline': Timeline,
+    '/timeline/following': Timeline,
+    '/timeline/trend': Timeline,
+    '/timeline/public': Timeline,
+    '/toot/:id': Toot,
+    '/explore': Explore,
+    '/search/:keyword': Search,
     '/new': NewToot,
     '/login': Login,
     '/oauth/:code': OAuth,
-    '/timeline': Timeline,
-    '/timeline/public': Timeline,
-    '/timeline/federated': Timeline,
-    '/toot/:id': Toot,
     '/settings': Settings,
     '*': NotFound,
   };
@@ -97,7 +97,7 @@
     }
 
     // Trend is the default route
-    if ($location === '/') replace('/trend');
+    if ($location === '/') replace('/timeline');
   });
 </script>
 

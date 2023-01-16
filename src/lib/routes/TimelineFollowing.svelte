@@ -7,8 +7,7 @@
 
   let statuses;
   $: if ($masto && !statuses) {
-    statuses = $masto.v1.timelines.listPublic({
-      local: true,
+    statuses = $masto.v1.timelines.listHome({
       limit: 5,
     });
   }
@@ -29,7 +28,7 @@
 
   // {querykey, pageParam} are what pass to the queryFn
   const query = createInfiniteQuery({
-    queryKey: ['timeline-public'],
+    queryKey: ['timeline-following'],
     queryFn: getStatuses,
     getNextPageParam: () => {
       // After first call, always return true to call next() function

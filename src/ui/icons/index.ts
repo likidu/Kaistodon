@@ -15,6 +15,7 @@ export { default as IconHeart } from './IconHeart.svelte';
 export { default as IconHourglass } from './IconHourglass.svelte';
 export { default as IconInbox } from './IconInbox.svelte';
 export { default as IconInfo } from './IconInfo.svelte';
+export { default as IconLinkExternal } from './IconLinkExternal.svelte';
 export { default as IconMenu } from './IconMenu.svelte';
 export { default as IconPause } from './IconPause.svelte';
 export { default as IconPen } from './IconPen.svelte';

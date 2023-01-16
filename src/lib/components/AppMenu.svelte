@@ -7,7 +7,7 @@
   import { Onyx } from '@/ui/services';
   import { getShortcutFromIndex } from '@/ui/utils/getShortcutFromIndex';
 
-  import { IconHourglass, IconPen, IconSettings, IconTrend, IconUsers } from '@/ui/icons';
+  import { IconHourglass, IconPen, IconSettings, IconTrend } from '@/ui/icons';
 
   type MenuItem = {
     id: string;
@@ -17,9 +17,8 @@
   };
   const menuItems: MenuItem[] = [
     { id: 'new', text: 'New Toot', route: '/new', icon: IconPen },
-    { id: 'trend', text: 'Trending', route: '/trend', icon: IconTrend },
     { id: 'timeline', text: 'Timeline', route: '/timeline', icon: IconHourglass },
-    { id: 'following', text: 'Following', route: '/following', icon: IconUsers },
+    { id: 'explore', text: 'Explore', route: '/explore', icon: IconTrend },
     { id: 'setttings', text: 'Settings', route: '/settings', icon: IconSettings },
   ];
 </script>

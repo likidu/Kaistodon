@@ -6,7 +6,7 @@
   import Icon from '@/ui/components/icon/Icon.svelte';
   import ListItem from '@/ui/components/list/ListItem.svelte';
   import { Color, IconSize, Layout } from '@/ui/enums';
-  import { IconComment, IconReply, IconStar } from '@/ui/icons';
+  import { IconComment, IconLinkExternal, IconReply, IconStar, IconUser } from '@/ui/icons';
   import { delay } from '@/ui/utils/delay';
 
   import PhotoSlider from '@/lib/components/PhotoSlider.svelte';
@@ -70,11 +70,29 @@
     },
   }}
   contextMenu={{
-    title: `${status.account.displayName}'s Status`,
+    title: `${status.account.displayName}'s Toot`,
+    shortcuts: [
+      {
+        label: 'Reblog',
+        icon: IconReply,
+        onSelect: () => {},
+      },
+      {
+        label: 'Fav',
+        icon: IconStar,
+        onSelect: () => {},
+      },
+      {
+        label: 'Reply',
+        icon: IconComment,
+        onSelect: () => {},
+      },
+    ],
     items: [
       {
         label: links[0],
         workingLabel: 'Opening URL...',
+        icon: IconLinkExternal,
         onSelect: async () => {
           if (links[0]) {
             // TODO: Update KaiOS lib to support this type
@@ -89,7 +107,8 @@
         },
       },
       {
-        label: `🙆‍♂️ ${status.account.acct}`,
+        label: `${status.account.acct}`,
+        icon: IconUser,
         onSelect: () => console.log('context menu item 3'),
       },
     ],

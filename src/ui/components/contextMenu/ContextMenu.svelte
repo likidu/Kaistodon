@@ -5,9 +5,11 @@
   import { Onyx } from '../../services';
   import { contextMenu } from '../../stores';
   import { getShortcutFromIndex } from '../../utils';
+  import Grid from '../grid/Grid.svelte';
   import NavGroup from '../nav/NavGroup.svelte';
   import Typography from '../Typography.svelte';
   import ContextMenuItem from './ContextMenuItem.svelte';
+  import ContextMenuShortcut from './ContextMenuShortcut.svelte';
 
   let working: string | null = null;
 
@@ -31,6 +33,22 @@
     <div class="title">{$contextMenu.data.title}</div>
     {#if $contextMenu.data.body}
       <Typography>{$contextMenu.data.body}</Typography>
+    {/if}
+    {#if $contextMenu.data.shortcuts}
+      <NavGroup groupId="contextShortcut">
+        <Grid class="divider">
+          {#each $contextMenu.data.shortcuts as shortcut, i}
+            <ContextMenuShortcut
+              icon={shortcut.icon}
+              text={shortcut.label}
+              navi={{
+                itemId: `menuShortcut${i + 1}`,
+                onSelect: async () => await shortcut.onSelect(),
+              }}
+            />
+          {/each}
+        </Grid>
+      </NavGroup>
     {/if}
     <NavGroup groupId="contextMenu" style="flex:1; min-height:0; overflow: auto;">
       {#each $contextMenu.data.items as item, i}

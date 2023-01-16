@@ -35,7 +35,7 @@
       console.log('[OAuth]: Access token: ', token);
       tokens.update({ instance, token });
 
-      replace('/trend');
+      replace('/timeline');
 
       return;
     } catch (error) {

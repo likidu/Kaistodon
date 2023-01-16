@@ -117,13 +117,8 @@ input {
   display: none;
 }
 
-.sub-route {
-  @apply flex flex-row justify-center gap-x-1 w-full;
-}
-
-.sub-route > li.active {
-  color: var(--accent-color);
-  font-weight: 600;
+.divider {
+  border-bottom: 1px solid var(--divider-color);
 }
 
 .stats {

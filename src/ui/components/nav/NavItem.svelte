@@ -18,6 +18,7 @@
     Onyx.contextMenu.open({
       title: contextMenu.title,
       body: contextMenu.body,
+      shortcuts: contextMenu.shortcuts,
       items: contextMenu.items,
     });
   }

@@ -5,6 +5,7 @@
   import { Onyx } from '../../services';
   import { contextMenu } from '../../stores';
   import { getShortcutFromIndex } from '../../utils';
+  import Divider from '../divider/Divider.svelte';
   import Grid from '../grid/Grid.svelte';
   import NavGroup from '../nav/NavGroup.svelte';
   import Typography from '../Typography.svelte';
@@ -34,24 +35,25 @@
     {#if $contextMenu.data.body}
       <Typography>{$contextMenu.data.body}</Typography>
     {/if}
-    {#if $contextMenu.data.shortcuts}
-      <NavGroup groupId="contextShortcut">
-        <Grid class="divider">
+    <NavGroup groupId="contextMenu" style="flex:1; min-height:0; overflow: auto;">
+      {#if $contextMenu.data.shortcuts}
+        <Grid>
           {#each $contextMenu.data.shortcuts as shortcut, i}
             <ContextMenuShortcut
               icon={shortcut.icon}
               text={shortcut.label}
               navi={{
                 itemId: `menuShortcut${i + 1}`,
+                shortcutKey: getShortcutFromIndex(i),
                 onSelect: async () => await shortcut.onSelect(),
               }}
             />
           {/each}
         </Grid>
-      </NavGroup>
-    {/if}
-    <NavGroup groupId="contextMenu" style="flex:1; min-height:0; overflow: auto;">
+        <Divider />
+      {/if}
       {#each $contextMenu.data.items as item, i}
+        {@const offset = !!$contextMenu.data.shortcuts && $contextMenu.data.shortcuts.length}
         <ContextMenuItem
           icon={item.icon}
           imageUrl={item.imageUrl}
@@ -60,7 +62,7 @@
           working={working === `menuItem${i + 1}`}
           navi={{
             itemId: `menuItem${i + 1}`,
-            shortcutKey: getShortcutFromIndex(i),
+            shortcutKey: getShortcutFromIndex(offset + i),
             onSelect: async () => {
               if (working) return;
               working = `menuItem${i + 1}`;

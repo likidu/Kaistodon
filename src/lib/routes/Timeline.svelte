@@ -31,7 +31,7 @@
       url: `${prefix}/trend`,
     },
     {
-      label: 'Public',
+      label: 'Local',
       url: `${prefix}/public`,
     },
   ];

@@ -13,7 +13,7 @@ const defaultSettings: Partial<Settings> = {
   textSize: TextSize.Medium,
   textWeight: TextWeight.Medium,
   displayDensity: Density.Normal,
-  borderRadius: 14,
+  borderRadius: 0,
   animationSpeed: Animations.Normal,
   showHelpText: true,
   // Shortcuts

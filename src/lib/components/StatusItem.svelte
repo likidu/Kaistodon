@@ -7,12 +7,15 @@
   import ListItem from '@/ui/components/list/ListItem.svelte';
   import { Color, IconSize, Layout } from '@/ui/enums';
   import { IconComment, IconLinkExternal, IconReply, IconStar, IconUser } from '@/ui/icons';
+  import { Onyx } from '@/ui/services';
   import { delay } from '@/ui/utils/delay';
 
   import PhotoSlider from '@/lib/components/PhotoSlider.svelte';
+  import { masto } from '@/lib/services';
 
   export let status: mastodon.v1.Status;
-  export let sub: boolean = false;
+  // If it's a sub item (reply) in the Toot
+  export let sub = false;
   export let layout: Layout = Layout.Row;
 
   const { seralized, links } = parseHtml(status.content);
@@ -56,6 +59,58 @@
     const seralized = dom.getElementsByTagName('body')[0].innerHTML;
     return { seralized, links };
   }
+
+  async function reblog() {
+    if (!status.reblogged) {
+      try {
+        await $masto.v1.statuses.reblog(status.id);
+      } catch (error) {}
+    } else {
+      try {
+        await $masto.v1.statuses.unreblog(status.id);
+      } catch (error) {}
+    }
+  }
+
+  async function fav() {
+    if (!status.favourited) {
+      try {
+        await $masto.v1.statuses.favourite(status.id);
+      } catch (error) {}
+    } else {
+      try {
+        await $masto.v1.statuses.unfavourite(status.id);
+      } catch (error) {}
+    }
+  }
+
+  function linkItems() {
+    const contentLinks = links.map((link) => {
+      return {
+        label: link,
+        workingLabel: 'Opening URL...',
+        icon: IconLinkExternal,
+        onSelect: async () => {
+          // TODO: Update KaiOS lib to support this type
+          // @ts-ignore: next line
+          const view = new WebActivity('view', {
+            type: 'url',
+            url: links[0],
+          });
+          view.start();
+          await delay(1000);
+        },
+      };
+    });
+    return [
+      {
+        label: `${status.account.acct}`,
+        icon: IconUser,
+        onSelect: () => console.log('context menu item 3'),
+      },
+      ...contentLinks,
+    ];
+  }
 </script>
 
 <ListItem
@@ -73,14 +128,20 @@
     title: `${status.account.displayName}'s Toot`,
     shortcuts: [
       {
-        label: 'Reblog',
+        label: status.reblogged ? 'Unreblog' : 'Reblog',
         icon: IconReply,
-        onSelect: () => {},
+        onSelect: () => {
+          reblog();
+          Onyx.contextMenu.close();
+        },
       },
       {
-        label: 'Fav',
+        label: status.favourited ? 'Unfav' : 'Fav',
         icon: IconStar,
-        onSelect: () => {},
+        onSelect: () => {
+          fav();
+          Onyx.contextMenu.close();
+        },
       },
       {
         label: 'Reply',
@@ -88,30 +149,7 @@
         onSelect: () => {},
       },
     ],
-    items: [
-      {
-        label: links[0],
-        workingLabel: 'Opening URL...',
-        icon: IconLinkExternal,
-        onSelect: async () => {
-          if (links[0]) {
-            // TODO: Update KaiOS lib to support this type
-            // @ts-ignore: next line
-            const view = new WebActivity('view', {
-              type: 'url',
-              url: links[0],
-            });
-            view.start();
-            await delay(1000);
-          }
-        },
-      },
-      {
-        label: `${status.account.acct}`,
-        icon: IconUser,
-        onSelect: () => console.log('context menu item 3'),
-      },
-    ],
+    items: linkItems(),
   }}
 >
   <svelte:fragment slot="subtitle">
@@ -126,11 +164,15 @@
     {/if}
     <section class="stats">
       <div class="item">
-        <Icon size={IconSize.Smallest} color={Color.Secondary}><IconReply /></Icon>
+        <Icon size={IconSize.Smallest} color={status.reblogged ? Color.Supplementary : Color.Secondary}>
+          <IconReply />
+        </Icon>
         <span>{status.reblogsCount}</span>
       </div>
       <div class="item">
-        <Icon size={IconSize.Smallest} color={Color.Secondary}><IconStar /></Icon>
+        <Icon size={IconSize.Smallest} color={status.favourited ? Color.Supplementary : Color.Secondary}>
+          <IconStar />
+        </Icon>
         <span>{status.favouritesCount}</span>
       </div>
       <div class="item">

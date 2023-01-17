@@ -1,12 +1,11 @@
 <script lang="ts">
   export let title: string = undefined;
-  let css: string = '';
-  export { css as style };
+  export let style = '';
 </script>
 
-<div class="root" style={css}>
+<div class="root">
   {#if title}
-    <h1 class="title">
+    <h1 class="title" {style}>
       {title}
     </h1>
   {:else}

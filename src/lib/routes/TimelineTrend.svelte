@@ -31,7 +31,7 @@
 
   // {querykey, pageParam} are what pass to the queryFn
   const query = createInfiniteQuery({
-    queryKey: ['trend-status'],
+    queryKey: ['timeline-trend'],
     queryFn: getStatuses,
     getNextPageParam: () => {
       // After first call, always return true to call next() function

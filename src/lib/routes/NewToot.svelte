@@ -57,7 +57,7 @@
             {
               label: 'Discard',
               onSelect: () => {
-                replace('/trend');
+                replace('/timeline');
               },
             },
           ],

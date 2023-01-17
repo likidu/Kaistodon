@@ -9,6 +9,16 @@
 
   export let query: CreateInfiniteQueryResult<mastodon.v1.Status[]>;
 
+  let loadMoreTitle: string;
+
+  $: if ($query.isFetching) {
+    loadMoreTitle = 'Loading more...';
+  } else if ($query.hasNextPage) {
+    loadMoreTitle = 'Load more';
+  } else {
+    loadMoreTitle = 'End of list';
+  }
+
   function parseHtml(html: string): { seralized: string; links: string[] } {
     let links = [];
 
@@ -65,7 +75,8 @@
     {/each}
   {/each}
   <Button
-    title="Load more"
+    title={loadMoreTitle}
+    disabled={!$query.hasNextPage || $query.isFetchingNextPage}
     navi={{
       itemId: 'STATUS_LOAD_MORE',
       onSelect: () => $query.fetchNextPage(),

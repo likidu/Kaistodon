@@ -1,5 +1,5 @@
 <script lang="ts">
-  import svelteLogo from '@/assets/svelte.svg';
+  import logo from '@/assets/mastodon.svg';
   import Button from '@/ui/components/buttons/Button.svelte';
   import View from '@/ui/components/view/View.svelte';
   import ViewContent from '@/ui/components/view/ViewContent.svelte';
@@ -8,18 +8,20 @@
   import SelectRow from '@/ui/components/form/SelectRow.svelte';
   import { CLIENT_ID, Instance, REDIRECT_URL } from '../configs';
 
+  import Divider from '@/ui/components/divider/Divider.svelte';
   import { settings } from '../stores';
 
   let instance: string = Instance.CMX;
 </script>
 
 <View>
-  <ViewHeader title="Sign in" />
+  <ViewHeader title="Welcome" />
   <ViewContent>
     <div class="flex flex-col items-center justify-center">
+      <img src={logo} class="w-32 h-32" alt="Mastodon Logo" />
       <h1>Kaistodon</h1>
-      <img src={svelteLogo} class="w-32 h-32" alt="Svelte Logo" />
     </div>
+    <Divider title="Select instance" />
     <SelectRow
       label="Instance"
       value={instance}

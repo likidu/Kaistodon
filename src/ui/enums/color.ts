@@ -3,4 +3,5 @@ export enum Color {
   Secondary = 'var(--secondary-text-color)',
   Tertiary = 'var(--divider-color)',
   Accent = 'var(--accent-color)',
+  Supplementary = 'var(--supplementary-color)',
 }

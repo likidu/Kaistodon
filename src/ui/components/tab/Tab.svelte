@@ -6,7 +6,7 @@
 
   import { RenderState } from '@/ui/enums';
   import type { TabItem } from '@/ui/models';
-  import { contextMenu } from '@/ui/stores';
+  import { appMenu, contextMenu } from '@/ui/stores';
 
   export let items: TabItem[];
 
@@ -29,6 +29,11 @@
   );
 
   let tab: HTMLUListElement;
+
+  $: {
+    if ($appMenu.state === RenderState.Destroyed) keyMan.enable();
+    else keyMan.disable();
+  }
 
   $: {
     if ($contextMenu.state === RenderState.Destroyed) keyMan.enable();
@@ -69,7 +74,7 @@
 
 <style lang="postcss">
   .root {
-    @apply w-full;
+    @apply w-full p-1;
   }
 
   .tab-items {

@@ -17,8 +17,9 @@
   --text-color-s: 0%;
   --text-color-l: 0%;
 
-  --focus-color-a: 0.2;
-  --divider-color-a: 0.2;
+  --supplementary-color-h: 39;
+  --supplementary-color-s: 100%;
+  --supplementary-color-l: 60%;
 
   --radius: 14px;
   --animation-speed: 300ms;
@@ -26,15 +27,17 @@
   --bold-font-weight: 600;
   --base-font-size: 10px;
 
-  /* Computed */
-
+  /* Transparency */
   --default-a: 1;
   --primary-text-a: 0.88;
   --secondary-text-a: 0.5;
+  --focus-color-a: 0.2;
+  --divider-color-a: 0.2;
 
   --app-bg-color: hsla(0, 0%, 0%, 1);
   --app-text-color: hsla(0, 0%, 100%, 0.88);
 
+  /* Computed */
   --text-color: hsla(
     var(--text-color-h),
     var(--text-color-s),
@@ -70,6 +73,12 @@
     var(--card-color-s),
     var(--card-color-l),
     var(--default-a)
+  );
+  --supplementary-color: hsla(
+    var(--supplementary-color-h),
+    var(--supplementary-color-s),
+    var(--supplementary-color-l),
+    var(--primary-text-a)
   );
   --card-border-color: hsla(0, 0%, 100%, 0.2);
   --shortcut-color: var(--secondary-text-color);
@@ -115,10 +124,6 @@ input {
 
 ::-webkit-scrollbar {
   display: none;
-}
-
-.divider {
-  border-bottom: 1px solid var(--divider-color);
 }
 
 .stats {

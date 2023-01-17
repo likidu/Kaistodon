@@ -12,6 +12,32 @@
 </script>
 
 <GridItem {navi}>
-  <Icon size={IconSize.Small}><svelte:component this={icon} /></Icon>
-  <p>{text}</p>
+  <div class="root">
+    <div class="container">
+      <Icon size={IconSize.Small}><svelte:component this={icon} /></Icon>
+      <span class="label">{text}</span>
+    </div>
+    {#if navi.shortcutKey}
+      <p class="shortcut">{navi.shortcutKey}</p>
+    {/if}
+  </div>
 </GridItem>
+
+<style lang="postcss">
+  .root {
+    @apply flex items-center px-3 py-1;
+  }
+
+  .container {
+    @apply flex flex-col items-center;
+  }
+
+  .label {
+    @apply text-sm overflow-hidden text-ellipsis;
+  }
+
+  .shortcut {
+    font-weight: var(--bold-font-weight);
+    color: var(--shortcut-color);
+  }
+</style>

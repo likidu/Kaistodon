@@ -8,7 +8,7 @@
   import { Onyx } from '@/ui/services';
 
   import AppMenu from '@/lib/components/AppMenu.svelte';
-  import { Explore, Home, Login, NewToot, NotFound, OAuth, Search, Settings, Timeline, Toot } from '@/lib/routes';
+  import { Explore, Login, NewToot, NotFound, OAuth, Search, Settings, Timeline, Toot } from '@/lib/routes';
   import { settings, tokens } from '@/lib/stores';
   import { onMount } from 'svelte';
 
@@ -32,7 +32,6 @@
   const queryClient = new QueryClient();
 
   const routes = {
-    '/': Home,
     '/timeline': Timeline,
     '/timeline/following': Timeline,
     '/timeline/trend': Timeline,

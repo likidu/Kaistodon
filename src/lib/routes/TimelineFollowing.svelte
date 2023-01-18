@@ -5,6 +5,8 @@
   import StatusList from '@/lib/components/StatusList.svelte';
   import { masto } from '@/lib/services';
 
+  const queryKey = 'timeline-following';
+
   /**
    * Common function to get statuses
    * @param pageParam: call next page
@@ -18,13 +20,15 @@
 
   // {querykey, pageParam} are what pass to the queryFn
   const query = createInfiniteQuery({
-    queryKey: ['timeline-following'],
+    queryKey: [queryKey],
     queryFn: ({ pageParam }) => getStatuses(pageParam),
     getNextPageParam: (lastStatuses) => lastStatuses[lastStatuses.length - 1].id,
-    // staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    cacheTime: Infinity,
   });
 </script>
 
 {#if $masto}
-  <StatusList {query} />
+  <StatusList {queryKey} {query} />
 {/if}

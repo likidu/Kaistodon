@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { useQueryClient } from '@tanstack/svelte-query';
   import type { mastodon } from 'masto';
   import { push } from 'svelte-spa-router';
   import Time from 'svelte-time';
@@ -13,10 +14,13 @@
   import PhotoSlider from '@/lib/components/PhotoSlider.svelte';
   import { masto } from '@/lib/services';
 
+  export let queryKey: string = undefined;
   export let status: mastodon.v1.Status;
   // If it's a sub item (reply) in the Toot
   export let sub = false;
   export let layout: Layout = Layout.Row;
+
+  const queryClient = useQueryClient();
 
   const { seralized, links } = parseHtml(status.content);
 
@@ -70,6 +74,7 @@
         await $masto.v1.statuses.unreblog(status.id);
       } catch (error) {}
     }
+    if (queryKey) queryClient.invalidateQueries({ queryKey: [queryKey] });
   }
 
   async function fav() {
@@ -82,6 +87,7 @@
         await $masto.v1.statuses.unfavourite(status.id);
       } catch (error) {}
     }
+    if (queryKey) queryClient.invalidateQueries({ queryKey: [queryKey] });
   }
 
   function linkItems() {
@@ -106,7 +112,7 @@
       {
         label: `${status.account.acct}`,
         icon: IconUser,
-        onSelect: () => console.log('context menu item 3'),
+        onSelect: () => push(`/account/${status.account.id}`),
       },
       ...contentLinks,
     ];
@@ -124,7 +130,8 @@
       if (status.repliesCount > 0) push(`/toot/${status.id}`);
     },
   }}
-  contextMenu={{
+  contextMenu={// Context menu only enabled when queryKey is available
+  queryKey && {
     title: `${status.account.displayName}'s Toot`,
     shortcuts: [
       {

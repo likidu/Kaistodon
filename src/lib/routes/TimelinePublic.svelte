@@ -31,7 +31,10 @@
     queryKey: ['timeline-public'],
     queryFn: ({ pageParam }) => getStatuses(pageParam),
     getNextPageParam: (lastStatuses) => lastStatuses[lastStatuses.length - 1].id,
-    // staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    // staleTime: 3 * 60 * 1000,
+    staleTime: Infinity,
+    cacheTime: Infinity,
   });
 </script>
 

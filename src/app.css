@@ -22,7 +22,7 @@
   --supplementary-color-l: 60%;
 
   --radius: 14px;
-  --animation-speed: 300ms;
+  --animation-speed: 50ms;
   --regular-font-weight: 400;
   --bold-font-weight: 600;
   --base-font-size: 10px;
@@ -38,42 +38,12 @@
   --app-text-color: hsla(0, 0%, 100%, 0.88);
 
   /* Computed */
-  --text-color: hsla(
-    var(--text-color-h),
-    var(--text-color-s),
-    var(--text-color-l),
-    var(--primary-text-a)
-  );
-  --secondary-text-color: hsla(
-    var(--text-color-h),
-    var(--text-color-s),
-    var(--text-color-l),
-    var(--secondary-text-a)
-  );
-  --divider-color: hsla(
-    var(--text-color-h),
-    var(--text-color-s),
-    var(--text-color-l),
-    var(--divider-color-a)
-  );
-  --accent-color: hsla(
-    var(--accent-color-h),
-    var(--accent-color-s),
-    var(--accent-color-l),
-    var(--default-a)
-  );
-  --focus-color: hsla(
-    var(--accent-color-h),
-    var(--accent-color-s),
-    var(--accent-color-l),
-    var(--focus-color-a)
-  );
-  --card-color: hsla(
-    var(--card-color-h),
-    var(--card-color-s),
-    var(--card-color-l),
-    var(--default-a)
-  );
+  --text-color: hsla(var(--text-color-h), var(--text-color-s), var(--text-color-l), var(--primary-text-a));
+  --secondary-text-color: hsla(var(--text-color-h), var(--text-color-s), var(--text-color-l), var(--secondary-text-a));
+  --divider-color: hsla(var(--text-color-h), var(--text-color-s), var(--text-color-l), var(--divider-color-a));
+  --accent-color: hsla(var(--accent-color-h), var(--accent-color-s), var(--accent-color-l), var(--default-a));
+  --focus-color: hsla(var(--accent-color-h), var(--accent-color-s), var(--accent-color-l), var(--focus-color-a));
+  --card-color: hsla(var(--card-color-h), var(--card-color-s), var(--card-color-l), var(--default-a));
   --supplementary-color: hsla(
     var(--supplementary-color-h),
     var(--supplementary-color-s),

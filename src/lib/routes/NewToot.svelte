@@ -24,11 +24,6 @@
   // Characters limit
   const limit = 500;
 
-  $: profile = createQuery<mastodon.v1.Account>({
-    queryKey: ['user-profile'],
-    queryFn: async () => !!$masto && (await $masto.v1.accounts.verifyCredentials()),
-  });
-
   const keyMan = OnyxKeys.subscribe(
     {
       onSoftLeft: async () => {
@@ -83,6 +78,12 @@
     { priority: 3 },
   );
 
+  $: profile = createQuery<mastodon.v1.Account>({
+    queryKey: ['my-profile'],
+    queryFn: async () => !!$masto && (await $masto.v1.accounts.verifyCredentials()),
+    staleTime: 15 * 60 * 1000,
+  });
+
   // Counting the remaining allowed chars
   // TODO: This is slow, looking for optimized solution
   $: count = () => {
@@ -110,7 +111,7 @@
         align={Alignment.Top}
         titleText={profile.displayName === '' ? profile.username : profile.displayName}
         subtitleText={profile.url}
-        navi={{ itemId: 'USER-PROFILE', onSelect: () => {} }}
+        navi={{ itemId: 'MY-PROFILE', onSelect: () => {} }}
         nofocus={true}
       />
     {/if}

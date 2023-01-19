@@ -9,7 +9,7 @@
   import { CLIENT_ID, Instance, REDIRECT_URL } from '../configs';
 
   import Divider from '@/ui/components/divider/Divider.svelte';
-  import { settings } from '../stores';
+  import { settings, tokens } from '../stores';
 
   let instance: string = Instance.CMX;
 </script>
@@ -38,6 +38,7 @@
         onSelect: async () => {
           // Update current instance in Local Storage
           settings.update({ instance });
+          tokens.update({ instance, token: '' });
           const url = `https://${instance}/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL}&scope=read write follow push`;
           if (process.env.NODE_ENV === 'development') {
             window.open(url, '_blank');

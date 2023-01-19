@@ -41,7 +41,14 @@
   // The name has to be consistent with one set in the sw.js
   const channel = new BroadcastChannel('sw-messages');
 
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        // staleTime: Infinity,
+        // cacheTime: Infinity,
+      },
+    },
+  });
 
   const routes = {
     '/': Home,

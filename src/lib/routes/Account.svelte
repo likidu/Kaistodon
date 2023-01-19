@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createInfiniteQuery, createQuery } from '@tanstack/svelte-query';
+  import { createInfiniteQuery, createQuery, useQueryClient } from '@tanstack/svelte-query';
   import type { mastodon } from 'masto';
   import { OnyxKeys } from 'onyx-keys';
   import { onDestroy } from 'svelte';
@@ -12,8 +12,8 @@
   import ViewContent from '@/ui/components/view/ViewContent.svelte';
   import ViewFooter from '@/ui/components/view/ViewFooter.svelte';
   import ViewHeader from '@/ui/components/view/ViewHeader.svelte';
-  import { IconSize } from '@/ui/enums';
-  import { IconBlock, IconFlag, IconMenu, IconUser, IconUserPlus, IconVolumeX } from '@/ui/icons';
+  import { Color, IconSize } from '@/ui/enums';
+  import { IconBlock, IconCheck, IconFlag, IconMenu, IconUser, IconUserPlus, IconVolumeX } from '@/ui/icons';
   import { Onyx } from '@/ui/services';
 
   import StatusList from '@/lib/components/StatusList.svelte';
@@ -23,34 +23,43 @@
 
   export let params: { id: string };
 
+  const queryClient = useQueryClient();
+
   const keyMan = OnyxKeys.subscribe(
     {
       onSoftRight: async () => {
-        Onyx.contextMenu.open({
-          title: 'Account Options',
-          items: [
-            {
-              label: 'Follow',
-              icon: IconUserPlus,
-              onSelect: async () => {},
-            },
-            {
-              label: 'Mute',
-              icon: IconVolumeX,
-              onSelect: () => {},
-            },
-            {
-              label: 'Block',
-              icon: IconBlock,
-              onSelect: () => {},
-            },
-            {
-              label: 'Report',
-              icon: IconFlag,
-              onSelect: () => {},
-            },
-          ],
-        });
+        if ($relationships.isSuccess) {
+          const { following, muting, blocking } = $relationships.data[0];
+          Onyx.contextMenu.open({
+            title: 'Account Options',
+            items: [
+              {
+                label: following ? 'Unfollow' : 'Follow',
+                icon: IconUserPlus,
+                onSelect: async () => {
+                  follow(following);
+                  queryClient.invalidateQueries({ queryKey: ['user-relationship'] });
+                  Onyx.contextMenu.close();
+                },
+              },
+              {
+                label: muting ? 'Unmute' : 'Mute',
+                icon: IconVolumeX,
+                onSelect: () => {},
+              },
+              {
+                label: blocking ? 'Unblock' : 'Block',
+                icon: IconBlock,
+                onSelect: () => {},
+              },
+              {
+                label: 'Report',
+                icon: IconFlag,
+                onSelect: () => {},
+              },
+            ],
+          });
+        }
       },
     },
     { priority: 3 },
@@ -59,8 +68,12 @@
   $: profile = createQuery<mastodon.v1.Account>({
     queryKey: ['user-profile', params.id],
     queryFn: async () => !!$masto && (await $masto.v1.accounts.fetch(params.id)),
-    staleTime: Infinity,
-    cacheTime: Infinity,
+  });
+
+  $: relationships = createQuery<mastodon.v1.Relationship[]>({
+    queryKey: ['user-relationship', params.id],
+    queryFn: async () => !!$masto && (await $masto.v1.accounts.fetchRelationships([params.id])),
+    // placeholderData: [''],
   });
 
   /**
@@ -79,25 +92,36 @@
     queryKey: ['user-timeline', params.id],
     queryFn: ({ pageParam }) => getStatuses(pageParam),
     getNextPageParam: (lastStatuses) => lastStatuses[lastStatuses.length - 1].id,
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-    cacheTime: Infinity,
   });
 
   onDestroy(() => keyMan.unsubscribe());
+
+  async function follow(following: boolean) {
+    console.log(following);
+    if (!following) {
+      try {
+        await $masto.v1.accounts.follow(params.id);
+      } catch (error) {}
+    } else {
+      try {
+        await $masto.v1.accounts.unfollow(params.id);
+      } catch (error) {}
+    }
+  }
 </script>
 
 <View>
   <ViewHeader title="Account" />
   <ViewContent>
-    {#if $profile.isLoading}
+    {#if $profile.isLoading && $relationships.isLoading}
       <Typography align="center">Loading Profile...</Typography>
     {/if}
-    {#if $profile.error}
+    {#if $profile.error || $relationships.error}
       <Typography align="center">Error!</Typography>
     {/if}
-    {#if $profile.isSuccess}
+    {#if $profile.isSuccess && $relationships.isSuccess}
       {@const profile = $profile.data}
+      {@const relationships = $relationships.data}
       <NavItem
         nofocus={true}
         navi={{
@@ -105,11 +129,29 @@
         }}
       >
         <div class="profile">
-          <img src={profile.avatarStatic} alt={profile.acct} class="w-32 h-32 rounded-3xl" />
+          <figure class="flex justify-between">
+            <img src={profile.avatarStatic} alt={profile.acct} class="w-32 h-32 rounded-3xl" />
+            <figcaption>
+              {#if relationships[0].following}
+                <div class="following">
+                  <Icon size={IconSize.Small} color={Color.Secondary}><IconCheck /></Icon>
+                  <span>Following</span>
+                </div>
+              {:else}
+                <div class="following">
+                  <span>Not following</span>
+                </div>
+              {/if}
+              <div class="follower">
+                <p>Followed by: {profile.followersCount}</p>
+                <p>Following: {profile.followingCount}</p>
+              </div>
+            </figcaption>
+          </figure>
           <h1>{profile.username}</h1>
           <h2>@{profile.acct}</h2>
           <section class="note">{@html profile.note}</section>
-          <p>Joined at <Time timestamp={profile.createdAt} /></p>
+          <p class="text-sm">Joined at <Time timestamp={profile.createdAt} /></p>
         </div>
       </NavItem>
     {/if}
@@ -129,10 +171,16 @@
     @apply px-3;
   }
   .profile > h2 {
-    color: var(--secondary-text-color);
+    @apply font-bold text-secondary;
   }
   .profile > section {
+    @apply text-secondary;
+  }
+
+  .follower {
     @apply text-sm;
-    color: var(--secondary-text-color);
+  }
+  .following {
+    @apply flex place-content-center rounded-xl border-2 p-1 my-2 font-bold text-secondary;
   }
 </style>

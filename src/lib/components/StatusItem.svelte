@@ -22,7 +22,7 @@
 
   const queryClient = useQueryClient();
 
-  const { seralized, links } = parseHtml(status.content);
+  const { links } = parseHtml(status.content);
 
   function parseHtml(html: string): { seralized: string; links: string[] } {
     let links = [];
@@ -127,7 +127,7 @@
   navi={{
     itemId: `STATUS-${status.id}`,
     onSelect: () => {
-      if (status.repliesCount > 0) push(`/toot/${status.id}`);
+      if (status.repliesCount > 0 && !sub) push(`/toot/${status.id}`);
     },
   }}
   contextMenu={// Context menu only enabled when queryKey is available
@@ -163,7 +163,7 @@
     {status.account.acct} &bull <Time relative timestamp={status.createdAt} />
   </svelte:fragment>
   <div class="status-content" style={sub && 'font-size: 1.2rem'} slot="content">
-    {@html seralized}
+    {@html parseHtml(status.content).seralized}
   </div>
   <div slot="bottom">
     {#if status.mediaAttachments.length > 0}

@@ -5,9 +5,9 @@
 
 <div class="root">
   {#if title}
-    <h1 class="title" {style}>
+    <h2 class="title" {style}>
       {title}
-    </h1>
+    </h2>
   {:else}
     <slot />
   {/if}

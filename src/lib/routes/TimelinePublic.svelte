@@ -5,6 +5,8 @@
   import StatusList from '@/lib/components/StatusList.svelte';
   import { masto } from '@/lib/services';
 
+  const queryKey = 'timeline-public';
+
   // const getStatuses = async ({ pageParam = false }): Promise<mastodon.v1.Status[]> => {
   //   if (pageParam) {
   //     const { value } = await statuses.next();
@@ -28,16 +30,14 @@
 
   // {querykey, pageParam} are what pass to the queryFn
   const query = createInfiniteQuery({
-    queryKey: ['timeline-public'],
+    queryKey: [queryKey],
     queryFn: ({ pageParam }) => getStatuses(pageParam),
     getNextPageParam: (lastStatuses) => lastStatuses[lastStatuses.length - 1].id,
     refetchOnWindowFocus: false,
     // staleTime: 3 * 60 * 1000,
-    staleTime: Infinity,
-    cacheTime: Infinity,
   });
 </script>
 
 {#if $masto}
-  <StatusList {query} />
+  <StatusList {queryKey} {query} />
 {/if}

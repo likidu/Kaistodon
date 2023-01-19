@@ -5,6 +5,8 @@
   import StatusList from '@/lib/components/StatusList.svelte';
   import { masto } from '@/lib/services';
 
+  const queryKey = 'timeline-trend';
+
   let statuses;
   $: if ($masto && !statuses) {
     console.log('[TrendStatuses]: Got masto store.');
@@ -31,7 +33,7 @@
 
   // {querykey, pageParam} are what pass to the queryFn
   const query = createInfiniteQuery({
-    queryKey: ['timeline-trend'],
+    queryKey: [queryKey],
     queryFn: getStatuses,
     getNextPageParam: () => {
       // After first call, always return true to call next() function
@@ -40,6 +42,6 @@
   });
 </script>
 
-{#if $masto}
-  <StatusList {query} />
+{#if statuses}
+  <StatusList {queryKey} {query} />
 {/if}

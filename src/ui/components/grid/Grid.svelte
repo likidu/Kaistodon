@@ -9,6 +9,6 @@
 
 <style lang="postcss">
   .root {
-    @apply grid auto-rows-max px-3 gap-x-4;
+    @apply grid auto-rows-max gap-x-1;
   }
 </style>

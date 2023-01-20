@@ -89,11 +89,20 @@
   $: onMount(() => {
     // Make Backspace work properly
     // TODO: Fix this in a better way
-    document.addEventListener('keydown', (ev) => {
-      if (ev.key === 'Backspace' && $location !== '/' && (ev.target as any).contentEditable !== 'true') {
-        ev.preventDefault();
-      }
-    });
+    document.addEventListener(
+      'keydown',
+      (ev) => {
+        if (
+          ev.key === 'Backspace' &&
+          $location !== '/' &&
+          (ev.target as any).contentEditable !== 'true' &&
+          (ev.target as HTMLElement).tagName !== 'INPUT'
+        ) {
+          ev.preventDefault();
+        }
+      },
+      false,
+    );
 
     channel.onmessage = (ev) => {
       console.log('[App]: Channel message: ', ev.data);

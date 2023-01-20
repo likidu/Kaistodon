@@ -4,9 +4,10 @@
   import { focus } from '../../actions/focus';
   import FormRow from './FormRow.svelte';
 
+  export let type = 'text';
+  export let value = '';
   export let label: string = null;
   export let icon: typeof SvelteComponent = null;
-  export let value: string;
   export let placeholder: string = undefined;
   export let disabled = false;
   export let align: 'left' | 'right' | 'edges' = 'edges';
@@ -17,7 +18,7 @@
   let focused = false;
 
   function handleChange(ev: Event) {
-    onChange((ev.target as HTMLElement).textContent);
+    onChange((ev.target as HTMLInputElement).value);
   }
 </script>
 
@@ -33,41 +34,26 @@
     onSelect: () => onSubmit?.(),
   }}
 >
-  {#if value?.length === 0 && !focused}
-    <div class="placeholder" use:focus={{ focused }}>
-      {placeholder}
-    </div>
-  {:else}
-    <div
-      class="input"
-      role="textbox"
-      contenteditable
-      use:focus={{ focused }}
-      on:input={handleChange}
-      on:keydown={(ev) => {
-        if (ev.key === 'Enter') ev.preventDefault();
-      }}
-      on:keyup={(ev) => {
-        if (ev.key === 'Enter') ev.preventDefault();
-      }}
-    >
-      {value}
-    </div>
-  {/if}
+  <input
+    class="input"
+    id="username"
+    {type}
+    {value}
+    {disabled}
+    {placeholder}
+    use:focus={{ focused }}
+    on:input={handleChange}
+    on:keydown={(ev) => {
+      if (ev.key === 'Enter') ev.preventDefault();
+    }}
+    on:keyup={(ev) => {
+      if (ev.key === 'Enter') ev.preventDefault();
+    }}
+  />
 </FormRow>
 
-<style>
-  .input,
-  .placeholder {
-    min-height: 24px;
-    min-width: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    outline: none;
-    padding: 0 2px;
-  }
-  .placeholder {
-    opacity: 0.5;
+<style lang="postcss">
+  .input {
+    @apply appearance-none bg-transparent border-none rounded-none w-full py-2 px-3 ml-5 leading-tight focus:outline-none;
   }
 </style>

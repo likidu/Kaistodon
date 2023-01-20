@@ -15,7 +15,7 @@
   import ViewFooter from '@/ui/components/view/ViewFooter.svelte';
   import ViewHeader from '@/ui/components/view/ViewHeader.svelte';
   import { IconSize } from '@/ui/enums';
-  import { IconDotsVertical, IconMenu } from '@/ui/icons';
+  import { IconDotsVertical, IconMenu, IconSearch } from '@/ui/icons';
 
   import { masto } from '@/lib/services';
 
@@ -34,7 +34,7 @@
 <View>
   <ViewHeader title="Explore" />
   <ViewContent>
-    <InputRow label="Keyword" value={keyword} placeholder="Enter keyword..." onChange={(val) => (keyword = val)} />
+    <InputRow icon={IconSearch} placeholder="Enter keyword..." onChange={(val) => (keyword = val)} />
     <Button
       title="Search"
       disabled={!!(keyword === '')}

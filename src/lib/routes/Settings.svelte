@@ -21,7 +21,7 @@
     Onyx.dialog.show({
       title: 'Sure to sign out?',
       actions: {
-        center: { label: 'Cancel', fn: () => console.log('Cancel sign out.') },
+        left: { label: 'Cancel', fn: () => console.log('Cancel sign out.') },
         right: {
           label: 'Sign out',
           fn: () => {

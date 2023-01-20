@@ -38,7 +38,7 @@
                 icon: IconUserPlus,
                 onSelect: async () => {
                   follow(following);
-                  queryClient.invalidateQueries({ queryKey: ['user-relationship'] });
+                  queryClient.invalidateQueries({ queryKey: ['user-relationship', params.id] });
                   Onyx.contextMenu.close();
                 },
               },
@@ -97,7 +97,6 @@
   onDestroy(() => keyMan.unsubscribe());
 
   async function follow(following: boolean) {
-    console.log(following);
     if (!following) {
       try {
         await $masto.v1.accounts.follow(params.id);

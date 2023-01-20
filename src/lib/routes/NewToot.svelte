@@ -5,7 +5,7 @@
   import { onDestroy } from 'svelte';
   import { replace } from 'svelte-spa-router';
 
-  import TextArea from '@/ui/components/form/TextArea.svelte';
+  import TextAreaBox from '@/ui/components/form/TextAreaBox.svelte';
   import LabeledRow from '@/ui/components/LabeledRow.svelte';
   import ListItem from '@/ui/components/list/ListItem.svelte';
   import SoftKey from '@/ui/components/softkey/SoftKey.svelte';
@@ -67,7 +67,7 @@
             });
             if (status.id) {
               Onyx.toaster.show({ type: 'success', title: 'New toot published.' });
-              replace('/');
+              replace('/timeline');
             }
           } catch (error) {
             Onyx.toaster.show({ type: 'error', title: `New toot publish error: ${error}` });
@@ -87,9 +87,10 @@
   // Counting the remaining allowed chars
   // TODO: This is slow, looking for optimized solution
   $: count = () => {
-    const dom = new DOMParser().parseFromString(toot, 'text/html');
-    const text = dom.body.textContent || '';
-    return text.trim().length;
+    // const dom = new DOMParser().parseFromString(toot, 'text/html');
+    // const text = dom.body.textContent || '';
+    // return text.trim().length;
+    return toot.trim().length;
   };
 
   onDestroy(() => keyMan.unsubscribe());
@@ -116,9 +117,9 @@
       />
     {/if}
     <LabeledRow label={`Remaining: ${(limit - count()).toString()}`}>
-      <TextArea bind:value={toot} placeholder="Toot to the world..." stopAddingText={count() >= limit} />
+      <TextAreaBox bind:value={toot} placeholder="Say to the world..." maxlength={limit} />
     </LabeledRow>
-    <p>{blob}</p>
+    <p>{console.log(JSON.stringify(blob.url))}</p>
   </ViewContent>
   <ViewFooter>
     <SoftKey>

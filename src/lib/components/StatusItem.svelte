@@ -16,8 +16,10 @@
 
   export let queryKey: string = undefined;
   export let status: mastodon.v1.Status;
-  // If it's a sub item (reply) in the Toot
+  // If it's a sub item (reply) in the Toot thread
   export let sub = false;
+  // If it's a sup item (original) in the Toot thread
+  export let sup = false;
   export let layout: Layout = Layout.Row;
 
   const queryClient = useQueryClient();
@@ -162,7 +164,7 @@
   <svelte:fragment slot="subtitle">
     {status.account.acct} &bull <Time relative timestamp={status.createdAt} />
   </svelte:fragment>
-  <div class="status-content" style={sub && 'font-size: 1.2rem'} slot="content">
+  <div class="status-content" style={sup && 'font-size: 1.6rem'} slot="content">
     {@html parseHtml(status.content).seralized}
   </div>
   <div slot="bottom">

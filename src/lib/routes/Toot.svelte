@@ -34,7 +34,7 @@
       <Typography align="center">Error!</Typography>
     {/if}
     {#if $status.isSuccess}
-      <StatusItem status={$status.data} />
+      <StatusItem sup={true} status={$status.data} />
     {/if}
     {#if $context.isLoading}
       <Typography align="center">Loading Replies...</Typography>

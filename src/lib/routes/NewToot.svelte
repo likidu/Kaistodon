@@ -18,9 +18,10 @@
   import { Onyx } from '@/ui/services';
 
   import { masto } from '@/lib/services';
+  import Console from '../components/Console.svelte';
 
   let toot = '';
-  let blob;
+  let blob: any;
   // Characters limit
   const limit = 500;
 
@@ -39,7 +40,7 @@
                 try {
                   const photo = await picker.start();
                   console.log('Results passed back from activity handler:');
-                  console.log(JSON.stringify(photo));
+                  console.warn(`photo: ${JSON.stringify(photo)}`);
                   blob = photo;
                 } catch (error) {}
                 Onyx.contextMenu.close();
@@ -119,7 +120,7 @@
     <LabeledRow label={`Remaining: ${(limit - count()).toString()}`}>
       <TextAreaBox bind:value={toot} placeholder="Say to the world..." maxlength={limit} />
     </LabeledRow>
-    <p>{console.log(JSON.stringify(blob.url))}</p>
+    <Console />
   </ViewContent>
   <ViewFooter>
     <SoftKey>

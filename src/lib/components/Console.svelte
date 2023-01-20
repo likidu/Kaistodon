@@ -1,4 +1,6 @@
 <script lang="ts">
+  import LineClamp from './LineClamp.svelte';
+
   let warn: string;
 
   // console.warn(`sendCode(): ${JSON.stringify(data)}`);
@@ -15,8 +17,10 @@
   window.console = console;
 </script>
 
-<div id="console-errors">
+<div id="console">
   {#if warn}
-    <p class="line-clamp-2 text-orange-500 ">{warn}</p>
+    <LineClamp lines={5}>
+      <p class="text-orange-500 text-sm">{warn}</p>
+    </LineClamp>
   {/if}
 </div>

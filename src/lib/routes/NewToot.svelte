@@ -19,9 +19,10 @@
 
   import { masto } from '@/lib/services';
   import Console from '../components/Console.svelte';
+  import type { PhotoAttachment } from '../models';
 
   let toot = '';
-  let blob: any;
+  let photo: PhotoAttachment;
   // Characters limit
   const limit = 500;
 
@@ -38,10 +39,13 @@
                 // @ts-ignore: next line
                 const picker = new WebActivity('pick', { type: ['image/jpeg', 'image/png', 'image/gif'] });
                 try {
-                  const photo = await picker.start();
-                  console.log('Results passed back from activity handler:');
+                  photo = await picker.start();
                   console.warn(`photo: ${JSON.stringify(photo)}`);
-                  blob = photo;
+                  const { filename } = photo;
+                  const attachment = await $masto.v2.mediaAttachments.create({
+                    file: new Blob([fs.readFileSync('../some_image.png')]),
+                    description: 'Some image',
+                  });
                 } catch (error) {}
                 Onyx.contextMenu.close();
               },

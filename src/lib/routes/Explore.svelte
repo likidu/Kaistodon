@@ -55,7 +55,7 @@
         <ListSimpleItem
           primaryText={`#${tag.name}`}
           secondaryText={`${tag.history[0].uses} people talking`}
-          navi={{ itemId: `TAG-${i + 1}`, onSelect: () => {} }}
+          navi={{ itemId: `TAG_${i + 1}`, onSelect: () => {} }}
         />
       {/each}
     {/if}

@@ -7,21 +7,21 @@
   import View from '@/ui/components/view/View.svelte';
   import ViewContent from '@/ui/components/view/ViewContent.svelte';
 
-  import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URL } from '@/lib/configs';
+  import { REDIRECT_URL } from '@/lib/configs';
   import type { TokenRequest, TokenResponse } from '@/lib/models';
-  import { settings, tokens } from '@/lib/stores';
+  import { getCurrentInstance, tokens } from '@/lib/stores';
 
   export let params: { code: string };
 
   const { code } = params;
-  const { instance } = $settings;
+  const { id, url, client_id, client_secret } = getCurrentInstance();
 
   onMount(async () => {
     if (!code) return;
 
     const request: TokenRequest = {
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
+      client_id,
+      client_secret,
       scope: 'read write follow push',
       redirect_uri: REDIRECT_URL,
       code,
@@ -29,11 +29,11 @@
     };
 
     try {
-      const { data } = await axios.post<TokenResponse>(`https://${instance}/oauth/token`, request);
+      const { data } = await axios.post<TokenResponse>(`https://${url}/oauth/token`, request);
       const { access_token: token } = data;
       // Update instance's token in Local Storage
       console.log('[OAuth]: Access token: ', token);
-      tokens.update({ instance, token });
+      tokens.update({ instance: id, token });
 
       replace('/timeline');
 
@@ -46,7 +46,7 @@
 
 <View>
   <ViewContent>
-    <Typography align="center">Signing in {instance}...</Typography>
+    <Typography align="center">Signing in {id}...</Typography>
     <p>{code}</p>
   </ViewContent>
 </View>

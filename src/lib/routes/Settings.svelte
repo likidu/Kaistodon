@@ -1,21 +1,31 @@
 <script lang="ts">
+  import { createQuery } from '@tanstack/svelte-query';
+  import type { mastodon } from 'masto';
   import { replace } from 'svelte-spa-router';
 
   import Button from '@/ui/components/buttons/Button.svelte';
+  import Divider from '@/ui/components/divider/Divider.svelte';
   import SelectRow from '@/ui/components/form/SelectRow.svelte';
-  import Icon from '@/ui/components/icon/Icon.svelte';
-  import SoftKey from '@/ui/components/softkey/SoftKey.svelte';
+  import ToggleRow from '@/ui/components/form/ToggleRow.svelte';
+  import ListItem from '@/ui/components/list/ListItem.svelte';
+  import Typography from '@/ui/components/Typography.svelte';
   import View from '@/ui/components/view/View.svelte';
   import ViewContent from '@/ui/components/view/ViewContent.svelte';
-  import ViewFooter from '@/ui/components/view/ViewFooter.svelte';
   import ViewHeader from '@/ui/components/view/ViewHeader.svelte';
-  import { Color, IconSize } from '@/ui/enums';
-  import { IconInfo, IconMenu } from '@/ui/icons';
+  import { Alignment, Color } from '@/ui/enums';
   import { Onyx } from '@/ui/services';
 
   import { themes } from '@/lib/configs';
   import type { Settings } from '@/lib/models';
+  import { masto } from '@/lib/services';
   import { settings, tokens } from '@/lib/stores';
+
+  $: profile = createQuery<mastodon.v1.Account>({
+    queryKey: ['my-profile'],
+    queryFn: async () => !!$masto && (await $masto.v1.accounts.verifyCredentials()),
+    staleTime: Infinity,
+    cacheTime: Infinity,
+  });
 
   function signout() {
     Onyx.dialog.show({
@@ -37,6 +47,7 @@
 
   function handleChange(key: keyof Settings, val: any) {
     settings.updateOne(key, val);
+
     if (key === 'themeId') {
       const theme = themes.find((a) => a.id === $settings.themeId) ?? themes[2];
       settings.update({
@@ -59,6 +70,32 @@
 <View>
   <ViewHeader title="Settings" />
   <ViewContent>
+    {#if $profile.isLoading}
+      <Typography align="center">Loading Profile...</Typography>
+    {/if}
+    {#if $profile.error}
+      <Typography align="center">Error!</Typography>
+    {/if}
+    {#if $profile.isSuccess}
+      {@const profile = $profile.data}
+      <ListItem
+        imageUrl={profile.avatarStatic}
+        align={Alignment.Top}
+        titleText={profile.displayName === '' ? profile.username : profile.displayName}
+        subtitleText={profile.url}
+        navi={{ itemId: 'MY_PROFILE', onSelect: () => {} }}
+        nofocus={true}
+      />
+    {/if}
+    <Button
+      title="Switch Instance"
+      color={Color.Primary}
+      navi={{
+        itemId: 'SWITCH_INSTANCE',
+        onSelect: () => replace('/login/switch'),
+      }}
+    />
+    <Divider />
     <SelectRow
       label="Theme"
       value={$settings.themeId}
@@ -68,6 +105,12 @@
       ]}
       onChange={(val) => handleChange('themeId', val)}
     />
+    <ToggleRow
+      label="Shortcut Key"
+      value={$settings.enableShortcutKeys}
+      onChange={(val) => handleChange('enableShortcutKeys', val)}
+    />
+    <Divider />
     <Button
       title="Sign out"
       color={Color.Primary}
@@ -77,12 +120,4 @@
       }}
     />
   </ViewContent>
-  <ViewFooter>
-    <SoftKey>
-      <div><Icon size={IconSize.Small}><IconMenu /></Icon></div>
-      <div>
-        <Icon size={IconSize.Small}><IconInfo /></Icon>
-      </div>
-    </SoftKey>
-  </ViewFooter>
 </View>

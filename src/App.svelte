@@ -21,7 +21,7 @@
     Timeline,
     Toot,
   } from '@/lib/routes';
-  import { settings, tokens } from '@/lib/stores';
+  import { getCurrentToken, settings } from '@/lib/stores';
   import { onMount } from 'svelte';
 
   // Register service worker
@@ -60,7 +60,7 @@
     '/explore': Explore,
     '/search/:keyword': Search,
     '/new': NewToot,
-    '/login': Login,
+    '/login/:switch?': Login,
     '/oauth/:code': OAuth,
     '/account/:id': Account,
     '/settings': Settings,
@@ -109,7 +109,7 @@
     };
 
     // Find the token for the selected instance
-    const { token } = $tokens.find((t) => t.instance === $settings.instance);
+    const { token } = getCurrentToken();
     if (token === '') {
       console.log('[App]: Not signed in...');
       replace('/login');

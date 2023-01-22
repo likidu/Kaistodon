@@ -1,13 +1,13 @@
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 
 import { Animations, Density, TextSize, TextWeight } from '@/ui/enums';
 import { Storage } from '@/ui/services';
 
-import { Instance, themes } from '@/lib/configs';
+import { DEFAULT_INSTANCE, INSTANCES, themes } from '@/lib/configs';
 import type { Settings } from '@/lib/models';
 
 const defaultSettings: Partial<Settings> = {
-  instance: Instance.HACHYDERM,
+  instance: DEFAULT_INSTANCE.id,
   // Theme
   themeId: themes[2].id,
   textSize: TextSize.Medium,
@@ -62,3 +62,5 @@ function createSettings() {
 }
 
 export const settings = createSettings();
+
+export const getCurrentInstance = () => INSTANCES.find((ins) => ins.id === get(settings).instance);

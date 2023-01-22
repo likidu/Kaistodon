@@ -4,16 +4,17 @@ import type { Readable } from 'svelte/store';
 import { derived } from 'svelte/store';
 
 import type { Settings, Token } from '@/lib/models';
-import { settings, tokens } from '@/lib/stores';
+import { getCurrentInstance, getCurrentToken, settings, tokens } from '@/lib/stores';
 
 export const masto = derived<[Readable<Settings>, Readable<Token[]>], mastodon.Client>(
   [settings, tokens],
   ([$settings, $tokens], set) => {
-    const { instance, token } = $tokens.find((t) => t.instance === $settings.instance);
+    const { url } = getCurrentInstance();
+    const { token } = getCurrentToken();
     console.log('[masto.ts]: Masto store get token: ', token);
 
     const client = login({
-      url: `https://${instance}`,
+      url: `https://${url}`,
       // accessToken: 'fM-4XXGcYHkJfAN7mM0Ap2OnX79UozEzjf7jd8ReXnY',
       ...(token && { accessToken: token }),
     });

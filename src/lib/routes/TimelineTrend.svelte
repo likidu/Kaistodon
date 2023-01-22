@@ -23,7 +23,7 @@
   const getStatuses = async ({ pageParam = false }): Promise<mastodon.v1.Status[]> => {
     console.log('triggered, next is', pageParam);
     if (pageParam) {
-      // TODO: Set corret statuses type as it was lazy loaded
+      // TODO: Set correct statuses type as it was lazy loaded
       const { value } = await statuses.next();
       return value;
     } else {

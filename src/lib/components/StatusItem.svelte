@@ -99,13 +99,6 @@
         workingLabel: 'Opening URL...',
         icon: IconLinkExternal,
         onSelect: async () => {
-          // TODO: Update KaiOS lib to support this type
-          // @ts-ignore: next line
-          // const view = new WebActivity('view', {
-          //   type: 'url',
-          //   url: links[0],
-          // });
-          // view.start();
           window.open(link, '_blank');
           await delay(1000);
         },
@@ -128,7 +121,7 @@
   imageSize={sub && IconSize.Small}
   titleText={status.account.displayName}
   navi={{
-    itemId: `STATUS-${status.id}`,
+    itemId: `STATUS_${status.id}`,
     onSelect: () => {
       if (status.repliesCount > 0 && !sub) push(`/toot/${status.id}`);
     },

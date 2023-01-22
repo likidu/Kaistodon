@@ -26,9 +26,9 @@
   // Characters limit
   const limit = 500;
 
-  const pictures = navigator.b2g.getDeviceStorage('pictures');
-  const iterable = pictures.enumerate();
-  printAllFiles(iterable);
+  // const pictures = navigator.b2g.getDeviceStorage('pictures');
+  // const iterable = pictures.enumerate();
+  // printAllFiles(iterable);
 
   const keyMan = OnyxKeys.subscribe(
     {
@@ -128,7 +128,7 @@
         align={Alignment.Top}
         titleText={profile.displayName === '' ? profile.username : profile.displayName}
         subtitleText={profile.url}
-        navi={{ itemId: 'MY-PROFILE', onSelect: () => {} }}
+        navi={{ itemId: 'MY_PROFILE', onSelect: () => {} }}
         nofocus={true}
       />
     {/if}

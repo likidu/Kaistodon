@@ -44,3 +44,5 @@ const initToken: Token = {
 const storedTokens = Storage.get<Token[]>(storageKey);
 
 export const tokens = createStore();
+
+export const getCurrentToken = () => get(tokens).find((t) => t.instance === get(settings).instance);

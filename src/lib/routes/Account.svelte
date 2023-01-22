@@ -6,6 +6,8 @@
   import Time from 'svelte-time';
 
   import Icon from '@/ui/components/icon/Icon.svelte';
+  import ListHeader from '@/ui/components/list/ListHeader.svelte';
+  import NavItem from '@/ui/components/nav/NavItem.svelte';
   import SoftKey from '@/ui/components/softkey/SoftKey.svelte';
   import Typography from '@/ui/components/Typography.svelte';
   import View from '@/ui/components/view/View.svelte';
@@ -13,13 +15,20 @@
   import ViewFooter from '@/ui/components/view/ViewFooter.svelte';
   import ViewHeader from '@/ui/components/view/ViewHeader.svelte';
   import { Color, IconSize } from '@/ui/enums';
-  import { IconBlock, IconCheck, IconFlag, IconMenu, IconUser, IconUserPlus, IconVolumeX } from '@/ui/icons';
+  import {
+    IconBlock,
+    IconCheck,
+    IconFlag,
+    IconMenu,
+    IconUser,
+    IconUserMinus,
+    IconUserPlus,
+    IconVolumeX,
+  } from '@/ui/icons';
   import { Onyx } from '@/ui/services';
 
   import StatusList from '@/lib/components/StatusList.svelte';
   import { masto } from '@/lib/services';
-  import ListHeader from '@/ui/components/list/ListHeader.svelte';
-  import NavItem from '@/ui/components/nav/NavItem.svelte';
 
   export let params: { id: string };
 
@@ -35,7 +44,7 @@
             items: [
               {
                 label: following ? 'Unfollow' : 'Follow',
-                icon: IconUserPlus,
+                icon: following ? IconUserMinus : IconUserPlus,
                 onSelect: async () => {
                   follow(following);
                   queryClient.invalidateQueries({ queryKey: ['user-relationship', params.id] });
@@ -124,7 +133,7 @@
       <NavItem
         nofocus={true}
         navi={{
-          itemId: 'USER-PROFILE',
+          itemId: 'USER_PROFILE',
         }}
       >
         <div class="profile">

@@ -1,13 +1,15 @@
 <script lang="ts">
   import { push } from 'svelte-spa-router';
 
+  import { settings } from '@/lib/stores';
   import ListSimpleItem from '@/ui/components/list/ListSimpleItem.svelte';
-  import NavGroup from '@/ui/components/nav/NavGroup.svelte';
+  import View from '@/ui/components/view/View.svelte';
+  import ViewContent from '@/ui/components/view/ViewContent.svelte';
+  import ViewHeader from '@/ui/components/view/ViewHeader.svelte';
   import { IconSize } from '@/ui/enums';
+  import { IconHourglass, IconPen, IconSettings, IconTrend } from '@/ui/icons';
   import { Onyx } from '@/ui/services';
   import { getShortcutFromIndex } from '@/ui/utils/getShortcutFromIndex';
-
-  import { IconHourglass, IconPen, IconSettings, IconTrend } from '@/ui/icons';
 
   type MenuItem = {
     id: string;
@@ -16,23 +18,23 @@
     icon: any | null;
   };
   const menuItems: MenuItem[] = [
-    { id: 'new', text: 'New Toot', route: '/new', icon: IconPen },
-    { id: 'timeline', text: 'Timeline', route: '/timeline', icon: IconHourglass },
-    { id: 'explore', text: 'Explore', route: '/explore', icon: IconTrend },
-    { id: 'setttings', text: 'Settings', route: '/settings', icon: IconSettings },
+    { id: 'NEW', text: 'New Toot', route: '/new', icon: IconPen },
+    { id: 'TIMELINE', text: 'Timeline', route: '/timeline', icon: IconHourglass },
+    { id: 'EXPLORE', text: 'Explore', route: '/explore', icon: IconTrend },
+    { id: 'SETTINGS', text: 'Settings', route: '/settings', icon: IconSettings },
   ];
 </script>
 
-<NavGroup groupId="app-menu">
-  <div class="header">Kaistodon</div>
-  <div class="scroller" data-nav-scroller>
+<View>
+  <ViewHeader title={$settings.instance} />
+  <ViewContent>
     {#each menuItems as item, i}
       <ListSimpleItem
         icon={item.icon}
         imageSize={IconSize.Small}
         primaryText={item.text}
         navi={{
-          itemId: item.id,
+          itemId: `MENU_${item.id}`,
           shortcutKey: getShortcutFromIndex(i),
           onSelect: () => {
             Onyx.appMenu.close();
@@ -44,8 +46,8 @@
         }}
       />
     {/each}
-  </div>
-</NavGroup>
+  </ViewContent>
+</View>
 
 <style>
   :global([data-onyx-group-id='app-menu']) {

@@ -1,7 +1,8 @@
 <script lang="ts">
   import LineClamp from './LineClamp.svelte';
 
-  let warns: string[];
+  // let warns = [''];
+  let warn: string;
 
   // console.warn(`sendCode(): ${JSON.stringify(data)}`);
   const console: Console = (function (oldCons) {
@@ -9,7 +10,8 @@
       ...oldCons,
       warn: function (text) {
         oldCons.warn(text);
-        warns.push(text);
+        // warns.push(text);
+        warn = text;
       },
     };
   })(window.console);
@@ -18,11 +20,11 @@
 </script>
 
 <div id="console">
-  {#if warns}
-    {#each warns as warn}
-      <LineClamp lines={5}>
-        <p class="text-orange-500 text-sm">{warn}</p>
-      </LineClamp>
-    {/each}
+  {#if warn}
+    <!-- {#each warns as warn} -->
+    <LineClamp lines={5}>
+      <p class="text-orange-500 text-sm">{warn}</p>
+    </LineClamp>
+    <!-- {/each} -->
   {/if}
 </div>

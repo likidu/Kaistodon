@@ -26,6 +26,10 @@
   // Characters limit
   const limit = 500;
 
+  const pictures = navigator.b2g.getDeviceStorage('pictures');
+  const iterable = pictures.enumerate();
+  printAllFiles(iterable);
+
   const keyMan = OnyxKeys.subscribe(
     {
       onSoftLeft: async () => {
@@ -42,10 +46,6 @@
                   photo = await picker.start();
                   console.warn(`photo: ${JSON.stringify(photo)}`);
                   const { filename } = photo;
-
-                  const pictures = navigator.b2g.getDeviceStorage('pictures');
-                  const iterable = pictures.enumerate();
-                  printAllFiles(iterable);
 
                   // const attachment = await $masto.v2.mediaAttachments.create({
                   //   file: new Blob([fs.readFileSync('../some_image.png')]),

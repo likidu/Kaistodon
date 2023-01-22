@@ -7,7 +7,7 @@ import { Instance, themes } from '@/lib/configs';
 import type { Settings } from '@/lib/models';
 
 const defaultSettings: Partial<Settings> = {
-  instance: Instance.CMX,
+  instance: Instance.HACHYDERM,
   // Theme
   themeId: themes[2].id,
   textSize: TextSize.Medium,

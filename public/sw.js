@@ -28,7 +28,8 @@ self.onsystemmessage = (evt) => {
           handler.postError('No Image!');
           return;
         }
-        handler.postResult({ type: 'image', url: image });
+        // handler.postResult({ type: 'image', url: image });
+        handler.postResult(image);
       }
     }
   };

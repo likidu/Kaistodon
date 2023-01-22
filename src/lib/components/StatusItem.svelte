@@ -101,11 +101,12 @@
         onSelect: async () => {
           // TODO: Update KaiOS lib to support this type
           // @ts-ignore: next line
-          const view = new WebActivity('view', {
-            type: 'url',
-            url: links[0],
-          });
-          view.start();
+          // const view = new WebActivity('view', {
+          //   type: 'url',
+          //   url: links[0],
+          // });
+          // view.start();
+          window.open(link, '_blank');
           await delay(1000);
         },
       };

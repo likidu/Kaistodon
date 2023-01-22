@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createInfiniteQuery } from '@tanstack/svelte-query';
+  import { createQuery } from '@tanstack/svelte-query';
   import type { mastodon } from 'masto';
 
   import Typography from '@/ui/components/Typography.svelte';
@@ -19,27 +19,27 @@
     await $masto.v2.search({
       q: params.keyword,
       limit: 5,
+      resolve: true,
       // ...(pageParam && { maxId: pageParam }),
     });
 
   // {querykey, pageParam} are what pass to the queryFn
-  const query = createInfiniteQuery({
+  const search = createQuery({
     queryKey: ['search-result'],
     queryFn: ({ pageParam }) => getSearchResult(pageParam),
-    getNextPageParam: (lastStatuses) => {},
   });
 </script>
 
 <View>
   <ViewContent>
-    {#if $query.isLoading}
+    {#if $search.isLoading}
       <Typography align="center">Loading...</Typography>
     {/if}
-    {#if $query.error}
+    {#if $search.error}
       <Typography align="center">Error!</Typography>
     {/if}
-    {#if $query.isSuccess}
-      {console.log($query.data.pages)}
+    {#if $search.isSuccess}
+      {console.log($search.data)}
     {/if}
   </ViewContent>
 </View>

@@ -11,7 +11,7 @@
   import Divider from '@/ui/components/divider/Divider.svelte';
   import { settings, tokens } from '../stores';
 
-  let instance: string = Instance.CMX;
+  let instance: string = Instance.HACHYDERM;
 </script>
 
 <View>

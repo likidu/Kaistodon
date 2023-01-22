@@ -5,7 +5,6 @@
   import FormRow from './FormRow.svelte';
 
   export let type = 'text';
-  export let value = '';
   export let label: string = null;
   export let icon: typeof SvelteComponent = null;
   export let placeholder: string = undefined;
@@ -15,6 +14,7 @@
   export let onSubmit: () => void = undefined;
 
   const itemId = uuidv4();
+  let value = '';
   let focused = false;
 
   function handleChange(ev: Event) {

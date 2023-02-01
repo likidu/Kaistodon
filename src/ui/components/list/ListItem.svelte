@@ -1,4 +1,5 @@
 <script lang="ts">
+  import LineClamp from '@/lib/components/LineClamp.svelte';
   import type { SvelteComponent } from 'svelte';
 
   import { Alignment, Color, IconSize, Layout } from '../../enums';
@@ -11,11 +12,13 @@
 
   export let layout: Layout = Layout.Row;
   export let imageUrl: string = null;
+  export let calloutImageUrl: string = null;
   export let imageStyle: 'square' | 'circle' = 'square';
   export let imageSize: IconSize = IconSize.Medium;
   export let icon: typeof SvelteComponent = null;
   export let iconColor: Color = Color.Primary;
   export let align: Alignment = Alignment.Top;
+  export let calloutText: string = null;
   export let titleText: string = null;
   export let subtitleText: string = null;
   export let contentText: string = null;
@@ -29,6 +32,20 @@
 <NavItem {navi} {contextMenu} {nofocus}>
   <div class="root">
     <div class="container" style={`align-items: ${align}; ${flexDirection}`}>
+      {#if calloutText}
+        <div class="callout">
+          {#if calloutImageUrl}
+            <img
+              class="image"
+              class:circle={true}
+              src={calloutImageUrl}
+              alt=""
+              style={`height: ${IconSize.Small}px; width: ${IconSize.Small}px;`}
+            />
+          {/if}
+          <LineClamp lines={1}><p>{calloutText}</p></LineClamp>
+        </div>
+      {/if}
       <ListItemWrapper {layout}>
         <svelte:fragment slot="header">
           {#if $settings.shortcutKeyLocation === 'left' && navi.shortcutKey}
@@ -97,6 +114,10 @@
     @apply flex flex-col items-center;
   }
 
+  .callout {
+    @apply flex items-center pb-2 ml-14;
+  }
+
   .icon {
     margin-right: 10px;
   }
@@ -132,12 +153,15 @@
   .title {
     @apply line-clamp-1;
   }
+  .callout,
+  .title,
   .subtitle {
     font-size: 1.2rem;
+  }
+  .subtitle {
     color: var(--secondary-text-color);
   }
   .title {
-    font-size: 1.2rem;
     color: var(--accent-color);
   }
 

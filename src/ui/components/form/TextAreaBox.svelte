@@ -67,5 +67,7 @@
   }
   .input {
     @apply flex appearance-none bg-transparent resize-none border-none rounded-none w-full px-2 leading-tight focus:outline-none;
+    line-height: 24px;
+    min-height: 24px;
   }
 </style>

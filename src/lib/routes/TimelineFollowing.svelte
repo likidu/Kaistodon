@@ -1,34 +1,28 @@
 <script lang="ts">
   import { createInfiniteQuery } from '@tanstack/svelte-query';
-  import type { mastodon } from 'masto';
 
   import StatusList from '@/lib/components/StatusList.svelte';
   import { masto } from '@/lib/services';
 
   const queryKey = 'timeline-following';
 
-  /**
-   * Common function to get statuses
-   * @param pageParam: call next page
-   * @returns Status[]
-   */
-  const getStatuses = async (pageParam: string): Promise<mastodon.v1.Status[]> =>
-    await $masto.v1.timelines.listHome({
-      limit: 5,
-      ...(pageParam && { maxId: pageParam }),
-    });
+  $: statuses = !!$masto && $masto.v1.timelines.listHome({ limit: 3 });
 
   // {querykey, pageParam} are what pass to the queryFn
   const query = createInfiniteQuery({
     queryKey: [queryKey],
-    queryFn: ({ pageParam }) => getStatuses(pageParam),
-    getNextPageParam: (lastStatuses) => lastStatuses[lastStatuses.length - 1].id,
+    queryFn: async ({ pageParam }) => {
+      if (pageParam === undefined) await statuses;
+      return await statuses.next();
+    },
+    getNextPageParam: (lastStatus) => {
+      const { done } = lastStatus;
+      return !done;
+    },
     refetchOnWindowFocus: false,
-    staleTime: Infinity,
-    cacheTime: Infinity,
+    // staleTime: Infinity,
+    // cacheTime: Infinity,
   });
 </script>
 
-{#if $masto}
-  <StatusList {queryKey} {query} />
-{/if}
+<StatusList {queryKey} {query} />

@@ -58,7 +58,7 @@
     '/timeline/public': Timeline,
     '/toot/:id': Toot,
     '/explore': Explore,
-    '/search/:keyword': Search,
+    '/search/': Search,
     '/new': NewToot,
     '/login/:switch?': Login,
     '/oauth/:code': OAuth,

@@ -7,18 +7,17 @@
 
   import TextAreaBox from '@/ui/components/form/TextAreaBox.svelte';
   import LabeledRow from '@/ui/components/LabeledRow.svelte';
-  import ListItem from '@/ui/components/list/ListItem.svelte';
   import SoftKey from '@/ui/components/softkey/SoftKey.svelte';
   import Typography from '@/ui/components/Typography.svelte';
   import View from '@/ui/components/view/View.svelte';
   import ViewContent from '@/ui/components/view/ViewContent.svelte';
   import ViewFooter from '@/ui/components/view/ViewFooter.svelte';
   import ViewHeader from '@/ui/components/view/ViewHeader.svelte';
-  import { Alignment } from '@/ui/enums';
   import { Onyx } from '@/ui/services';
 
   import { masto } from '@/lib/services';
   import Console from '../components/Console.svelte';
+  import ProfileItem from '../components/ProfileItem.svelte';
   import type { PhotoAttachment } from '../models';
 
   let toot = '';
@@ -123,14 +122,7 @@
     {/if}
     {#if $profile.isSuccess}
       {@const profile = $profile.data}
-      <ListItem
-        imageUrl={profile.avatarStatic}
-        align={Alignment.Top}
-        titleText={profile.displayName === '' ? profile.username : profile.displayName}
-        subtitleText={profile.url}
-        navi={{ itemId: 'MY_PROFILE', onSelect: () => {} }}
-        nofocus={true}
-      />
+      <ProfileItem {profile} nofocus={true} />
     {/if}
     <LabeledRow label={`Remaining: ${(limit - count()).toString()}`}>
       <TextAreaBox bind:value={toot} placeholder="Say to the world..." maxlength={limit} />

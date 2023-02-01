@@ -1,47 +1,28 @@
 <script lang="ts">
   import { createInfiniteQuery } from '@tanstack/svelte-query';
-  import type { mastodon } from 'masto';
 
   import StatusList from '@/lib/components/StatusList.svelte';
   import { masto } from '@/lib/services';
 
   const queryKey = 'timeline-trend';
 
-  let statuses;
-  $: if ($masto && !statuses) {
-    console.log('[TrendStatuses]: Got masto store.');
-    statuses = $masto.v1.trends.listStatuses({
-      limit: 3,
-    });
-  }
-
-  /**
-   * Common function to get statuses
-   * @param pageParam: call next page
-   * @returns Status[]
-   */
-  const getStatuses = async ({ pageParam = false }): Promise<mastodon.v1.Status[]> => {
-    console.log('triggered, next is', pageParam);
-    if (pageParam) {
-      // TODO: Set correct statuses type as it was lazy loaded
-      const { value } = await statuses.next();
-      return value;
-    } else {
-      return await statuses;
-    }
-  };
+  $: statuses = !!$masto && $masto.v1.trends.listStatuses({ limit: 3 });
 
   // {querykey, pageParam} are what pass to the queryFn
   const query = createInfiniteQuery({
     queryKey: [queryKey],
-    queryFn: getStatuses,
-    getNextPageParam: () => {
-      // After first call, always return true to call next() function
-      return true;
+    queryFn: async ({ pageParam }) => {
+      if (pageParam === undefined) await statuses;
+      return await statuses.next();
     },
+    getNextPageParam: (lastStatus) => {
+      const { done } = lastStatus;
+      return !done;
+    },
+    refetchOnWindowFocus: false,
+    // staleTime: Infinity,
+    // cacheTime: Infinity,
   });
 </script>
 
-{#if statuses}
-  <StatusList {queryKey} {query} />
-{/if}
+<StatusList {queryKey} {query} />

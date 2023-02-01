@@ -74,33 +74,31 @@
     { priority: 3 },
   );
 
-  $: profile = createQuery<mastodon.v1.Account>({
+  const profile = createQuery<mastodon.v1.Account>({
     queryKey: ['user-profile', params.id],
-    queryFn: async () => !!$masto && (await $masto.v1.accounts.fetch(params.id)),
+    queryFn: async () => await $masto.v1.accounts.fetch(params.id),
   });
 
-  $: relationships = createQuery<mastodon.v1.Relationship[]>({
+  const relationships = createQuery<mastodon.v1.Relationship[]>({
     queryKey: ['user-relationship', params.id],
-    queryFn: async () => !!$masto && (await $masto.v1.accounts.fetchRelationships([params.id])),
-    // placeholderData: [''],
+    queryFn: async () => await $masto.v1.accounts.fetchRelationships([params.id]),
   });
 
-  /**
-   * Common function to get statuses
-   * @param pageParam: call next page
-   * @returns Status[]
-   */
-  const getStatuses = async (pageParam: string): Promise<mastodon.v1.Status[]> =>
-    await $masto.v1.accounts.listStatuses(params.id, {
-      limit: 5,
-      ...(pageParam && { maxId: pageParam }),
-    });
+  $: statuses = !!$masto && $masto.v1.accounts.listStatuses(params.id, { limit: 5 });
 
   // {querykey, pageParam} are what pass to the queryFn
   const query = createInfiniteQuery({
     queryKey: ['user-timeline', params.id],
-    queryFn: ({ pageParam }) => getStatuses(pageParam),
-    getNextPageParam: (lastStatuses) => lastStatuses[lastStatuses.length - 1].id,
+    queryFn: async ({ pageParam }) => {
+      if (pageParam === undefined) await statuses;
+      return await statuses.next();
+    },
+    getNextPageParam: (lastStatus) => {
+      if (lastStatus) {
+        const { done } = lastStatus;
+        return !done;
+      }
+    },
   });
 
   onDestroy(() => keyMan.unsubscribe());

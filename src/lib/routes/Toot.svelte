@@ -13,14 +13,14 @@
 
   export let params: { id: string };
 
-  $: status = createQuery<mastodon.v1.Status>({
+  const status = createQuery<mastodon.v1.Status>({
     queryKey: ['status', params.id],
-    queryFn: async () => !!$masto && (await $masto.v1.statuses.fetch(params.id)),
+    queryFn: async () => await $masto.v1.statuses.fetch(params.id),
   });
 
-  $: context = createQuery<mastodon.v1.Context>({
+  const context = createQuery<mastodon.v1.Context>({
     queryKey: ['context', params.id],
-    queryFn: async () => !!$masto && (await $masto.v1.statuses.fetchContext(params.id)),
+    queryFn: async () => await $masto.v1.statuses.fetchContext(params.id),
   });
 </script>
 

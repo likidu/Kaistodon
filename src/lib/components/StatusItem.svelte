@@ -12,10 +12,12 @@
   import { delay } from '@/ui/utils/delay';
 
   import PhotoSlider from '@/lib/components/PhotoSlider.svelte';
+  import type { Reblog } from '@/lib/models';
   import { masto } from '@/lib/services';
 
   export let queryKey: string = undefined;
   export let status: mastodon.v1.Status;
+  export let origin: Reblog = undefined;
   // If it's a sub item (reply) in the Toot thread
   export let sub = false;
   // If it's a sup item (original) in the Toot thread
@@ -118,7 +120,9 @@
 <ListItem
   {layout}
   imageUrl={status.account.avatarStatic}
+  calloutImageUrl={origin && origin.avatar}
   imageSize={sub && IconSize.Small}
+  calloutText={origin && origin.by}
   titleText={status.account.displayName}
   navi={{
     itemId: `STATUS_${status.id}`,

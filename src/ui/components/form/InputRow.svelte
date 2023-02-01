@@ -55,5 +55,6 @@
 <style lang="postcss">
   .input {
     @apply appearance-none bg-transparent border-none rounded-none w-full px-2 ml-5 leading-tight focus:outline-none;
+    min-height: 24px;
   }
 </style>

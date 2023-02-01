@@ -58,14 +58,4 @@
     flex-direction: column;
     height: 100%;
   }
-  .header {
-    padding: 5px;
-    font-weight: var(--bold-font-weight);
-    color: var(--accent-color);
-    text-align: center;
-  }
-  .scroller {
-    overflow-y: auto;
-    flex: 1;
-  }
 </style>

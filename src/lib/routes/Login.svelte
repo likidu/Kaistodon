@@ -59,6 +59,7 @@
             // Update current instance in Local Storage
             settings.update({ instance: id });
             tokens.update({ instance: id, token: '' });
+            // Open OAuth Url to get the code
             const oauthUrl = `https://${url}/oauth/authorize?response_type=code&client_id=${client_id}&redirect_uri=${REDIRECT_URL}&scope=read write follow push`;
             if (process.env.NODE_ENV === 'development') {
               window.open(oauthUrl, '_blank');
@@ -67,7 +68,7 @@
               // @ts-ignore: next line
               const view = new WebActivity('view', {
                 type: 'url',
-                oauthUrl,
+                url: oauthUrl,
               });
               view.start();
             }

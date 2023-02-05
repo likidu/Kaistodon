@@ -6,24 +6,21 @@
 
   const queryKey = 'timeline-public';
 
-  $: statuses = !!$masto && $masto.v1.timelines.listPublic({ local: true, limit: 5 });
+  let statuses;
+  $: if (!statuses && $masto) statuses = $masto.v1.timelines.listPublic({ local: true, limit: 5 });
 
   // {querykey, pageParam} are what pass to the queryFn
   const query = createInfiniteQuery({
     queryKey: [queryKey],
     queryFn: async ({ pageParam }) => {
-      console.log(pageParam);
-      // Skip the first call as it will duplicated with next()
-      if (pageParam === undefined) await statuses;
+      // if (pageParam === undefined) await statuses;
       return await statuses.next();
     },
     getNextPageParam: (lastStatus) => {
       const { done } = lastStatus;
-      return !done;
+      return done ? undefined : true;
     },
-    // refetchOnWindowFocus: false,
-    // staleTime: Infinity,
-    // cacheTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 </script>
 

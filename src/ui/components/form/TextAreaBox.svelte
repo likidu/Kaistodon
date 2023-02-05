@@ -10,16 +10,20 @@
   export let maxlength: number = undefined;
   export let placeholder: string = undefined;
   export let disabled = false;
+  export let onChange: (val: string) => void;
   export let onSubmit: () => void = undefined;
 
   const itemId = uuidv4();
-
   let focused = false;
   let textarea: HTMLTextAreaElement;
 
   onMount(() => autosize(textarea));
 
   onDestroy(() => autosize.destroy(textarea));
+
+  function handleChange(ev: Event) {
+    onChange((ev.target as HTMLInputElement).value);
+  }
 </script>
 
 <NavItem
@@ -36,11 +40,12 @@
       class="input"
       rows="1"
       bind:this={textarea}
-      bind:value
+      {value}
       {disabled}
       {placeholder}
       {maxlength}
       use:focus={{ focused }}
+      on:input={handleChange}
       on:keydown={(ev) => {
         if (ev.key === 'Enter') {
           // TODO: use not obsolete APIs for this

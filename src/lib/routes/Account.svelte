@@ -84,19 +84,19 @@
     queryFn: async () => await $masto.v1.accounts.fetchRelationships([params.id]),
   });
 
-  $: statuses = !!$masto && $masto.v1.accounts.listStatuses(params.id, { limit: 5 });
+  let statuses;
+  $: if (!statuses && $masto) statuses = $masto.v1.accounts.listStatuses(params.id, { limit: 5 });
 
   // {querykey, pageParam} are what pass to the queryFn
   const query = createInfiniteQuery({
     queryKey: ['user-timeline', params.id],
     queryFn: async ({ pageParam }) => {
-      if (pageParam === undefined) await statuses;
       return await statuses.next();
     },
     getNextPageParam: (lastStatus) => {
       if (lastStatus) {
         const { done } = lastStatus;
-        return !done;
+        return done ? undefined : true;
       }
     },
   });
@@ -128,6 +128,7 @@
     {#if $profile.isSuccess && $relationships.isSuccess}
       {@const profile = $profile.data}
       {@const relationships = $relationships.data}
+      <figure class="profile-background" style={`background-image: url(${profile.headerStatic});`} />
       <NavItem
         nofocus={true}
         navi={{
@@ -135,12 +136,12 @@
         }}
       >
         <div class="profile">
-          <figure class="flex justify-between">
+          <figure class="flex items-end justify-between">
             <img src={profile.avatarStatic} alt={profile.acct} class="w-32 h-32 rounded-3xl" />
             <figcaption>
               {#if relationships[0].following}
                 <div class="following">
-                  <Icon size={IconSize.Small} color={Color.Secondary}><IconCheck /></Icon>
+                  <Icon size={IconSize.Smallest} color={Color.Secondary}><IconCheck /></Icon>
                   <span>Following</span>
                 </div>
               {:else}
@@ -148,10 +149,6 @@
                   <span>Not following</span>
                 </div>
               {/if}
-              <div class="follower">
-                <p>Followed by: {profile.followersCount}</p>
-                <p>Following: {profile.followingCount}</p>
-              </div>
             </figcaption>
           </figure>
           <h1>{profile.username}</h1>
@@ -159,10 +156,24 @@
           <section class="note">{@html profile.note}</section>
           <p class="text-sm">Joined at <Time timestamp={profile.createdAt} /></p>
         </div>
+        <div class="follower">
+          <div>
+            <p>Follower</p>
+            <p>{profile.followersCount}</p>
+          </div>
+          <div>
+            <p>Following</p>
+            <p>{profile.followingCount}</p>
+          </div>
+          <div>
+            <p>Posts</p>
+            <p>{profile.statusesCount}</p>
+          </div>
+        </div>
       </NavItem>
+      <ListHeader title="Statuses" />
+      <StatusList {query} />
     {/if}
-    <ListHeader title="Toots" />
-    <StatusList {query} />
   </ViewContent>
   <ViewFooter>
     <SoftKey>
@@ -173,8 +184,13 @@
 </View>
 
 <style lang="postcss">
+  .profile-background {
+    @apply w-full h-36;
+    background-size: no-repeat center center / cover;
+  }
+
   .profile {
-    @apply px-3;
+    @apply px-3 -mt-20;
   }
   .profile > h2 {
     @apply font-bold text-secondary;
@@ -184,9 +200,19 @@
   }
 
   .follower {
-    @apply text-sm;
+    @apply grid grid-cols-3 divide-x text-sm mt-4;
   }
+  .follower > div {
+    @apply flex flex-col items-center;
+  }
+  .follower > div > p:first-child {
+    @apply text-accent;
+  }
+  .follower > div > p:last-child {
+    @apply text-base font-bold;
+  }
+
   .following {
-    @apply flex place-content-center rounded-xl border-2 p-1 my-2 font-bold text-secondary;
+    @apply flex items-center place-content-center rounded-full border-2 px-3 py-0.5 font-bold text-xs text-secondary;
   }
 </style>

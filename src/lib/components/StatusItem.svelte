@@ -15,6 +15,7 @@
   import type { Reblog } from '@/lib/models';
   import { masto } from '@/lib/services';
 
+  // If queryKey is available, it will enable the context menu
   export let queryKey: string = undefined;
   export let status: mastodon.v1.Status;
   export let origin: Reblog = undefined;
@@ -23,6 +24,8 @@
   // If it's a sup item (original) in the Toot thread
   export let sup = false;
   export let layout: Layout = Layout.Row;
+  // Show images or not
+  export let showImages = true;
 
   const queryClient = useQueryClient();
 
@@ -153,7 +156,10 @@
       {
         label: 'Reply',
         icon: IconComment,
-        onSelect: () => {},
+        onSelect: () => {
+          Onyx.contextMenu.close();
+          push(`/reply/${status.id}`);
+        },
       },
     ],
     items: linkItems(),
@@ -166,7 +172,7 @@
     {@html parseHtml(status.content).seralized}
   </div>
   <div slot="bottom">
-    {#if status.mediaAttachments.length > 0}
+    {#if status.mediaAttachments.length > 0 && showImages}
       <PhotoSlider photos={status.mediaAttachments} />
     {/if}
     <section class="stats">
@@ -174,13 +180,13 @@
         <Icon size={IconSize.Smallest} color={status.reblogged ? Color.Supplementary : Color.Secondary}>
           <IconReply />
         </Icon>
-        <span>{status.reblogsCount}</span>
+        <span class:highlight={status.reblogged}>{status.reblogsCount}</span>
       </div>
       <div class="item">
         <Icon size={IconSize.Smallest} color={status.favourited ? Color.Supplementary : Color.Secondary}>
           <IconStar />
         </Icon>
-        <span>{status.favouritesCount}</span>
+        <span class:highlight={status.favourited}>{status.favouritesCount}</span>
       </div>
       <div class="item">
         <Icon size={IconSize.Smallest} color={Color.Secondary}><IconComment /></Icon>
@@ -194,5 +200,9 @@
   /* Margin top of innerHTML paragraph */
   .status-content > p:not(:first-child) {
     @apply mt-2;
+  }
+
+  .highlight {
+    color: var(--supplementary-color);
   }
 </style>

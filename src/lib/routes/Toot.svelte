@@ -25,10 +25,10 @@
 </script>
 
 <View>
-  <ViewHeader title="Toot" />
+  <ViewHeader title="Status" />
   <ViewContent>
     {#if $status.isLoading}
-      <Typography align="center">Loading Toot...</Typography>
+      <Typography align="center">Loading Status...</Typography>
     {/if}
     {#if $status.error}
       <Typography align="center">Error!</Typography>

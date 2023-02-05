@@ -6,22 +6,21 @@
 
   const queryKey = 'timeline-following';
 
-  $: statuses = !!$masto && $masto.v1.timelines.listHome({ limit: 3 });
+  let statuses;
+  $: if (!statuses && $masto) statuses = $masto.v1.timelines.listHome({ limit: 3 });
 
   // {querykey, pageParam} are what pass to the queryFn
   const query = createInfiniteQuery({
     queryKey: [queryKey],
     queryFn: async ({ pageParam }) => {
-      if (pageParam === undefined) await statuses;
+      // if (pageParam === undefined) await statuses;
       return await statuses.next();
     },
     getNextPageParam: (lastStatus) => {
       const { done } = lastStatus;
-      return !done;
+      return done ? undefined : true;
     },
     refetchOnWindowFocus: false,
-    // staleTime: Infinity,
-    // cacheTime: Infinity,
   });
 </script>
 

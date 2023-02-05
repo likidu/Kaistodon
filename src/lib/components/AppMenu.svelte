@@ -7,7 +7,7 @@
   import ViewContent from '@/ui/components/view/ViewContent.svelte';
   import ViewHeader from '@/ui/components/view/ViewHeader.svelte';
   import { IconSize } from '@/ui/enums';
-  import { IconHourglass, IconPen, IconSettings, IconTrend } from '@/ui/icons';
+  import { IconHourglass, IconPen, IconSettings, IconTrend, IconUser } from '@/ui/icons';
   import { Onyx } from '@/ui/services';
   import { getShortcutFromIndex } from '@/ui/utils/getShortcutFromIndex';
 
@@ -21,6 +21,7 @@
     { id: 'NEW', text: 'New Toot', route: '/new', icon: IconPen },
     { id: 'TIMELINE', text: 'Timeline', route: '/timeline', icon: IconHourglass },
     { id: 'EXPLORE', text: 'Explore', route: '/explore', icon: IconTrend },
+    { id: 'PROFILE', text: 'Profile', route: '/profile', icon: IconUser },
     { id: 'SETTINGS', text: 'Settings', route: '/settings', icon: IconSettings },
   ];
 </script>

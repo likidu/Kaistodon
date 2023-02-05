@@ -2,7 +2,7 @@
   "id": "kaistodon",
   "name": "Kaistodon",
   "description": "A Mastodon client for KaiOS",
-  "version": "0.1.1",
+  "version": "0.3.0",
   "launch_path": "/index.html",
   "icons": {
     "112": "/icons/icon_112.png",

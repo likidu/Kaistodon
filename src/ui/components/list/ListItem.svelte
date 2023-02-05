@@ -3,7 +3,7 @@
   import type { SvelteComponent } from 'svelte';
 
   import { Alignment, Color, IconSize, Layout } from '../../enums';
-  import { IconDotsVertical } from '../../icons';
+  import { IconDotsVertical, IconFlipForward } from '../../icons';
   import type { ContextMenu, Navigation } from '../../models';
   import { settings } from '../../stores';
   import Icon from '../icon/Icon.svelte';
@@ -34,6 +34,7 @@
     <div class="container" style={`align-items: ${align}; ${flexDirection}`}>
       {#if calloutText}
         <div class="callout">
+          <Icon size={IconSize.Small} color={Color.Secondary}><IconFlipForward /></Icon>
           {#if calloutImageUrl}
             <img
               class="image"
@@ -115,7 +116,7 @@
   }
 
   .callout {
-    @apply flex items-center pb-2 ml-14;
+    @apply flex items-center space-x-2 pb-2 ml-2;
   }
 
   .icon {

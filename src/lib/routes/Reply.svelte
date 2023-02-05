@@ -3,8 +3,9 @@
   import type { mastodon } from 'masto';
   import { OnyxKeys } from 'onyx-keys';
   import { onDestroy } from 'svelte';
-  import { replace } from 'svelte-spa-router';
+  import { pop } from 'svelte-spa-router';
 
+  import Divider from '@/ui/components/divider/Divider.svelte';
   import TextAreaBox from '@/ui/components/form/TextAreaBox.svelte';
   import LabeledRow from '@/ui/components/LabeledRow.svelte';
   import SoftKey from '@/ui/components/softkey/SoftKey.svelte';
@@ -15,28 +16,25 @@
   import ViewHeader from '@/ui/components/view/ViewHeader.svelte';
   import { Onyx } from '@/ui/services';
 
+  import StatusItem from '@/lib/components/StatusItem.svelte';
+  import type { PhotoAttachment } from '@/lib/models';
   import { masto } from '@/lib/services';
-  import Console from '../components/Console.svelte';
-  import ProfileItem from '../components/ProfileItem.svelte';
-  import type { PhotoAttachment } from '../models';
+
+  export let params: { id: string };
 
   let toot = '';
   let photo: PhotoAttachment;
   // Characters limit
   const limit = 500;
 
-  // const pictures = navigator.b2g.getDeviceStorage('pictures');
-  // const iterable = pictures.enumerate();
-  // printAllFiles(iterable);
-
   const keyMan = OnyxKeys.subscribe(
     {
       onSoftLeft: async () => {
         Onyx.contextMenu.open({
-          title: 'Toot Options',
+          title: 'Status Options',
           items: [
             {
-              label: 'Image',
+              label: 'Add Photo',
               onSelect: async () => {
                 // TODO: Update KaiOS lib to support this type
                 // @ts-ignore: next line
@@ -55,13 +53,10 @@
               },
             },
             {
-              label: 'Poll',
-              onSelect: () => {},
-            },
-            {
               label: 'Discard',
               onSelect: () => {
-                replace('/timeline');
+                Onyx.contextMenu.close();
+                pop();
               },
             },
           ],
@@ -71,15 +66,16 @@
         if (toot !== '') {
           try {
             const status = await $masto.v1.statuses.create({
+              inReplyToId: params.id,
               status: toot,
               visibility: 'public',
             });
             if (status.id) {
-              Onyx.toaster.show({ type: 'success', title: 'New toot published.' });
-              replace('/timeline');
+              Onyx.toaster.show({ type: 'success', title: 'Reply published.' });
+              pop();
             }
           } catch (error) {
-            Onyx.toaster.show({ type: 'error', title: `New toot publish error: ${error}` });
+            Onyx.toaster.show({ type: 'error', title: `Reply publish error: ${error}` });
           }
         }
       },
@@ -87,52 +83,46 @@
     { priority: 3 },
   );
 
-  $: profile = createQuery<mastodon.v1.Account>({
-    queryKey: ['my-profile'],
-    queryFn: async () => !!$masto && (await $masto.v1.accounts.verifyCredentials()),
-    staleTime: 15 * 60 * 1000,
+  $: status = createQuery<mastodon.v1.Status>({
+    queryKey: ['status', params.id],
+    queryFn: async () => !!$masto && (await $masto.v1.statuses.fetch(params.id)),
   });
 
-  // Counting the remaining allowed chars
-  // TODO: This is slow, looking for optimized solution
-  $: count = () => {
-    // const dom = new DOMParser().parseFromString(toot, 'text/html');
-    // const text = dom.body.textContent || '';
-    // return text.trim().length;
-    return toot.trim().length;
-  };
-
   onDestroy(() => keyMan.unsubscribe());
-
-  async function printAllFiles(iterable: any) {
-    for await (let file of iterable) {
-      console.warn(file);
-    }
-  }
 </script>
 
 <View>
-  <ViewHeader title="New Toot" />
+  <ViewHeader title="Reply" />
   <ViewContent>
-    {#if $profile.isLoading}
-      <Typography align="center">Loading Profile...</Typography>
+    {#if $status.isLoading}
+      <Typography align="center">Loading Status...</Typography>
     {/if}
-    {#if $profile.error}
+    {#if $status.error}
       <Typography align="center">Error!</Typography>
     {/if}
-    {#if $profile.isSuccess}
-      {@const profile = $profile.data}
-      <ProfileItem {profile} nofocus={true} />
+    {#if $status.isSuccess}
+      {@const status = $status.data}
+      <LabeledRow label={`Remaining: ${(limit - toot.trim().length).toString()}`}>
+        <TextAreaBox
+          value={`@${status.account.username} `}
+          maxlength={limit}
+          onChange={(val) => (toot = val.toString())}
+        />
+      </LabeledRow>
+      <Divider title="In reply to" />
+      {#if status.reblog}
+        <!-- Reblogger information to pass as prop -->
+        {@const origin = { by: status.account.displayName, avatar: status.account.avatarStatic }}
+        <StatusItem status={status.reblog} {origin} showImages={false} />
+      {:else}
+        <StatusItem {status} showImages={false} />
+      {/if}
     {/if}
-    <LabeledRow label={`Remaining: ${(limit - count()).toString()}`}>
-      <TextAreaBox bind:value={toot} placeholder="Say to the world..." maxlength={limit} />
-    </LabeledRow>
-    <Console />
   </ViewContent>
   <ViewFooter>
     <SoftKey>
       <div>Options</div>
-      <div>Publish</div>
+      <div>Post</div>
     </SoftKey>
   </ViewFooter>
 </View>

@@ -55,8 +55,7 @@
 
 <style lang="postcss">
   .root {
-    @apply flex items-center;
-    padding: 7px;
+    @apply flex items-center p-3;
     border-bottom: 1px solid var(--divider-color);
   }
   .icon {

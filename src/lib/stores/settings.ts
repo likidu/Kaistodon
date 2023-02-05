@@ -8,6 +8,7 @@ import type { Settings } from '@/lib/models';
 
 const defaultSettings: Partial<Settings> = {
   instance: DEFAULT_INSTANCE.id,
+  showSensitive: true,
   // Theme
   themeId: themes[2].id,
   textSize: TextSize.Medium,

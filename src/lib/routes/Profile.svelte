@@ -1,21 +1,22 @@
 <script lang="ts">
   import { createQuery } from '@tanstack/svelte-query';
   import type { mastodon } from 'masto';
-  import { replace } from 'svelte-spa-router';
+  import { push, replace } from 'svelte-spa-router';
 
   import Button from '@/ui/components/buttons/Button.svelte';
-  import ListItem from '@/ui/components/list/ListItem.svelte';
   import ListSimpleItem from '@/ui/components/list/ListSimpleItem.svelte';
   import Typography from '@/ui/components/Typography.svelte';
   import View from '@/ui/components/view/View.svelte';
   import ViewContent from '@/ui/components/view/ViewContent.svelte';
   import ViewHeader from '@/ui/components/view/ViewHeader.svelte';
-  import { Alignment, Color, IconSize } from '@/ui/enums';
+  import { Color, IconSize } from '@/ui/enums';
   import { IconBookmark, IconComment, IconStar } from '@/ui/icons';
   import { Onyx } from '@/ui/services';
+  import ProfileCard from '../components/ProfileCard.svelte';
 
   import { masto } from '@/lib/services';
   import { tokens } from '@/lib/stores';
+  import Divider from '@/ui/components/divider/Divider.svelte';
 
   $: profile = createQuery<mastodon.v1.Account>({
     queryKey: ['my-profile'],
@@ -54,30 +55,27 @@
     {/if}
     {#if $profile.isSuccess}
       {@const profile = $profile.data}
-      <ListItem
-        imageUrl={profile.avatarStatic}
-        align={Alignment.Top}
-        titleText={profile.displayName === '' ? profile.username : profile.displayName}
-        subtitleText={profile.url}
-        navi={{ itemId: 'MY_PROFILE', onSelect: () => {} }}
-        nofocus={true}
-      />
+      <ProfileCard {profile} />
+      <Divider title="Settings" />
       <ListSimpleItem
         primaryText="Statuses"
         icon={IconComment}
         imageSize={IconSize.Small}
+        hasMore={true}
         navi={{ itemId: 'POST', onSelect: () => {} }}
       />
       <ListSimpleItem
         primaryText="Favorites"
         icon={IconStar}
         imageSize={IconSize.Small}
-        navi={{ itemId: 'FAV', onSelect: () => {} }}
+        hasMore={true}
+        navi={{ itemId: 'FAV', onSelect: () => push('/profile/favorites') }}
       />
       <ListSimpleItem
         primaryText="Bookmarks"
         icon={IconBookmark}
         imageSize={IconSize.Small}
+        hasMore={true}
         navi={{ itemId: 'BOOKMARK', onSelect: () => {} }}
       />
     {/if}

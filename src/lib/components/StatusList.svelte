@@ -9,6 +9,7 @@
   import { IconDiscover } from '@/ui/icons';
   import { Onyx } from '@/ui/services';
 
+  import { settings } from '../stores';
   import StatusItem from './StatusItem.svelte';
 
   export let queryKey: string = undefined;
@@ -49,12 +50,14 @@
   {#each $q.data.pages as page}
     {#each page.value as status}
       {#if status.visibility === 'public' && !status.account.bot}
-        {#if status.reblog}
-          <!-- Reblogger information to pass as prop -->
-          {@const origin = { by: status.account.displayName, avatar: status.account.avatarStatic }}
-          <StatusItem {queryKey} status={status.reblog} {origin} />
-        {:else}
-          <StatusItem {queryKey} {status} />
+        {#if $settings.showSensitive ? true : status.sensitive === false}
+          {#if status.reblog}
+            <!-- Reblogger information to pass as prop -->
+            {@const origin = { by: status.account.displayName, avatar: status.account.avatarStatic }}
+            <StatusItem {queryKey} status={status.reblog} {origin} />
+          {:else}
+            <StatusItem {queryKey} {status} />
+          {/if}
         {/if}
       {/if}
     {/each}

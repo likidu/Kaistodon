@@ -25,14 +25,8 @@ export const INSTANCES: Instance[] = [
   {
     id: 'mstdn.social',
     url: 'mstdn.social',
-    client_id: 'XSR5kDhWDSXEaSEMsBCbi5nLasHrcCJP5rZXDJ6NV98',
-    client_secret: '2Z17LQjT23Q_wBJ_gILaFCU3yoNXMzOuAb68OFFqqvo',
-  },
-  {
-    id: 'mas.to',
-    url: 'mas.to',
-    client_id: 'XSR5kDhWDSXEaSEMsBCbi5nLasHrcCJP5rZXDJ6NV98',
-    client_secret: '2Z17LQjT23Q_wBJ_gILaFCU3yoNXMzOuAb68OFFqqvo',
+    client_id: 'SyYfscqRkuzURJwYvSqhNF8YaCZX-r1CiiIRV15PFWg',
+    client_secret: 'RfKDVOz6NU72IqkhbCTTRjsen-737gsi8TEF9d56gew',
   },
 ];
 

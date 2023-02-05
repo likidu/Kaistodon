@@ -76,6 +76,7 @@
               visibility: 'public',
             });
             if (status.id) {
+              Onyx.contextMenu.close();
               Onyx.toaster.show({ type: 'success', title: 'New status published.' });
               replace('/timeline');
             }

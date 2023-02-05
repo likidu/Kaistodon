@@ -71,6 +71,7 @@
               visibility: 'public',
             });
             if (status.id) {
+              Onyx.contextMenu.close();
               Onyx.toaster.show({ type: 'success', title: 'Reply published.' });
               pop();
             }

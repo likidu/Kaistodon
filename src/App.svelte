@@ -17,11 +17,14 @@
     NotFound,
     OAuth,
     Profile,
+    ProfileBookmarks,
+    ProfileFavorites,
+    ProfileStatuses,
     Reply,
     Search,
     Settings,
+    Status,
     Timeline,
-    Toot,
   } from '@/lib/routes';
   import { getCurrentToken, settings } from '@/lib/stores';
   import { onMount } from 'svelte';
@@ -58,7 +61,7 @@
     '/timeline/following': Timeline,
     '/timeline/trend': Timeline,
     '/timeline/public': Timeline,
-    '/toot/:id': Toot,
+    '/status/:id': Status,
     '/explore': Explore,
     '/search/': Search,
     '/new': New,
@@ -67,6 +70,9 @@
     '/oauth/:code': OAuth,
     '/account/:id': Account,
     '/profile': Profile,
+    '/profile/statuses': ProfileStatuses,
+    '/profile/favorites': ProfileFavorites,
+    '/profile/bookmarks': ProfileBookmarks,
     '/settings': Settings,
     '*': NotFound,
   };
@@ -88,8 +94,6 @@
 
   $: Onyx.settings.update($settings);
 
-  let hello: string;
-
   $: onMount(() => {
     // Make Backspace work properly
     // TODO: Fix this in a better way
@@ -99,7 +103,7 @@
         if (
           ev.key === 'Backspace' &&
           $location !== '/' &&
-          (ev.target as any).contentEditable !== 'true' &&
+          (ev.target as HTMLElement).tagName !== 'TEXTAREA' &&
           (ev.target as HTMLElement).tagName !== 'INPUT'
         ) {
           ev.preventDefault();

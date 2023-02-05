@@ -44,6 +44,11 @@
       onChange={(val) => handleChange('themeId', val)}
     />
     <ToggleRow
+      label="View Sensitive Statuses"
+      value={$settings.showSensitive}
+      onChange={(val) => handleChange('showSensitive', val)}
+    />
+    <ToggleRow
       label="Shortcut Key"
       value={$settings.enableShortcutKeys}
       onChange={(val) => handleChange('enableShortcutKeys', val)}

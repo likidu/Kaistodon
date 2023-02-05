@@ -130,7 +130,7 @@
   navi={{
     itemId: `STATUS_${status.id}`,
     onSelect: () => {
-      if (status.repliesCount > 0 && !sub) push(`/toot/${status.id}`);
+      if (status.repliesCount > 0 && !sub) push(`/status/${status.id}`);
     },
   }}
   contextMenu={// Context menu only enabled when queryKey is available

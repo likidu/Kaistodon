@@ -1,11 +1,13 @@
 <script lang="ts">
   import type { SvelteComponent } from 'svelte';
 
+  import { IconChevronRight } from '@/ui/icons';
   import { Color, IconSize } from '../../enums';
   import type { ContextMenu, Navigation } from '../../models';
   import { settings } from '../../stores';
   import Icon from '../icon/Icon.svelte';
   import NavItem from '../nav/NavItem.svelte';
+
   export let imageUrl: string = null;
   export let imageStyle: 'square' | 'circle' = 'square';
   export let imageSize: IconSize = IconSize.Medium;
@@ -16,6 +18,7 @@
   export let accentText: string = null;
   export let navi: Navigation;
   export let contextMenu: ContextMenu = null;
+  export let hasMore = false;
 </script>
 
 <NavItem {navi} {contextMenu}>
@@ -49,6 +52,11 @@
     </div>
     {#if $settings.shortcutKeyLocation === 'right' && navi.shortcutKey}
       <div class="shortcut">{navi.shortcutKey}</div>
+    {/if}
+    {#if hasMore && !navi.shortcutKey}
+      <div class="more">
+        <Icon size={imageSize} color={iconColor}><IconChevronRight /></Icon>
+      </div>
     {/if}
   </div>
 </NavItem>

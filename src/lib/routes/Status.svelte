@@ -25,7 +25,7 @@
 </script>
 
 <View>
-  <ViewHeader title="Status" />
+  <ViewHeader title="Status" showBack={true} />
   <ViewContent>
     {#if $status.isLoading}
       <Typography align="center">Loading Status...</Typography>
